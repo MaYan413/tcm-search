@@ -1364,6 +1364,7 @@ async function loadData() {
     window.suggestionFormulas = Object.keys(formulaDatabase);
     
     renderJieqiCalendar();
+    renderSmartRecommendation();
     console.log(`✅ 加载完成：${fullData.length} 条医案，${formulaCount} 种方剂`);
   } catch(e) {
     console.error('数据加载失败：', e);
