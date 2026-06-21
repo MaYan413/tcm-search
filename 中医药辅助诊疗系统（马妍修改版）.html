@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>本草问诊 · 中医药辅助诊疗系统 | 节气养生·雅致版</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-dark: #1a5a2a;
+  --primary: #2d7a3a;
+  --primary-light: #e8f5e9;
+  --secondary: #b89a3a;
+  --secondary-light: #fef8e7;
+  --gray-bg: #f5f7f5;
+  --gray-border: #e0e8e0;
+  --text-dark: #1a2e1a;
+  --text-gray: #5a6e5a;
+  --text-light: #8aa08a;
+  --white: #ffffff;
+  --shadow: 0 4px 20px rgba(0,0,0,0.06);
+  --shadow-hover: 0 8px 30px rgba(0,0,0,0.1);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--gray-bg);
+  color: var(--text-dark);
+  line-height: 1.5;
+}
+
+.header {
+  background: var(--primary-dark);
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--primary);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.logo-text {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 2px;
+}
+
+.logo-sub {
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+}
+
+.header-search {
+  flex: 1;
+  max-width: 480px;
+  position: relative;
+  margin: 0 24px;
+}
+
+.header-search input {
+  width: 100%;
+  height: 40px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 30px;
+  padding: 0 44px 0 18px;
+  font-size: 14px;
+  color: white;
+  outline: none;
+}
+
+.header-search input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.header-search input:focus {
+  background: rgba(255,255,255,0.15);
+  border-color: var(--secondary);
+}
+
+.header-search button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  background: var(--primary);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+}
+
+.search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-hover);
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+  display: none;
+  margin-top: 4px;
+}
+
+.search-suggestions.show {
+  display: block;
+}
+
+.suggestion-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-dark);
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.suggestion-item:hover {
+  background: var(--primary-light);
+}
+
+.nav-links {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-link {
+  padding: 6px 16px;
+  border-radius: 20px;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.nav-link:hover, .nav-link.active {
+  background: rgba(255,255,255,0.15);
+  color: white;
+}
+
+.main-container {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 32px;
+  gap: 32px;
+}
+
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+}
+
+.health-tip-card {
+  background: linear-gradient(135deg, var(--primary-light), var(--white));
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-border);
+}
+
+.health-tip-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.health-tip-content {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-gray);
+}
+
+.refresh-tip {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 12px;
+  cursor: pointer;
+  margin-top: 10px;
+  text-align: right;
+  width: 100%;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-border);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--primary-light);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.stat-number {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-gray);
+}
+
+.hot-search-section {
+  background: white;
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-border);
+}
+
+.hot-search-title {
+  font-size: 13px;
+  color: var(--text-gray);
+  margin-bottom: 12px;
+}
+
+.hot-search-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hot-search-item {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.hot-search-item:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* 节气推荐卡片样式 */
+.jieqi-recommend-card {
+  border-radius: 24px;
+  overflow: hidden;
+  margin-bottom: 28px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: var(--shadow-hover);
+}
+.jieqi-recommend-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 30px rgba(0,0,0,0.15);
+}
+.recommend-overlay {
+  background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 100%);
+  backdrop-filter: blur(2px);
+  padding: 32px 28px;
+}
+.recommend-badge-date {
+  font-size: 14px;
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+  display: inline-block;
+  background: transparent;
+  padding: 0;
+  color: rgba(255,255,255,0.92);
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.recommend-jieqi-name {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 44px;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+  margin: 12px 0 16px 0;
+  line-height: 1.2;
+  letter-spacing: 2px;
+}
+.recommend-feature-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.96);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  max-width: 85%;
+  margin-bottom: 32px;
+  font-weight: 500;
+}
+.recommend-detail-btn {
+  background: rgba(255,255,255,0.92);
+  border: none;
+  padding: 10px 28px;
+  border-radius: 60px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.recommend-detail-btn:hover {
+  background: white;
+  transform: scale(1.02);
+}
+
+.calendar-table {
+  background: white;
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-border);
+}
+
+.calendar-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--primary-light);
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.calendar-title::before {
+  content: '';
+  display: none;
+}
+
+.jieqi-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.jieqi-cell {
+  background: var(--gray-bg);
+  border-radius: var(--radius-sm);
+  padding: 14px 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid var(--gray-border);
+  text-align: center;
+}
+
+.jieqi-cell:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary);
+  background: white;
+}
+
+.jieqi-cell-name {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 6px;
+}
+
+.jieqi-cell-date {
+  font-size: 11px;
+  color: var(--text-gray);
+}
+
+.jieqi-cell.highlight {
+  background: var(--secondary-light);
+  border: 2px solid var(--secondary);
+  box-shadow: 0 2px 8px rgba(184,154,58,0.2);
+}
+
+/* 节气详情页样式 */
+.jieqi-detail {
+  background: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.jieqi-header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  padding: 36px 32px;
+  color: white;
+}
+.jieqi-detail-name {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+.jieqi-detail-time {
+  font-size: 15px;
+  opacity: 0.9;
+  margin-bottom: 20px;
+}
+.jieqi-detail-principle {
+  background: rgba(255,255,255,0.18);
+  padding: 14px 20px;
+  border-radius: 40px;
+  font-size: 15px;
+  line-height: 1.5;
+  display: inline-block;
+}
+.jieqi-detail-body {
+  padding: 32px 36px;
+}
+.jieqi-section {
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--gray-border);
+  padding-bottom: 24px;
+}
+.jieqi-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.jieqi-section-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 1px;
+}
+.jieqi-section-title::before {
+  content: '';
+  width: 5px;
+  height: 22px;
+  background: var(--primary);
+  border-radius: 4px;
+}
+.detail-content {
+  background: var(--gray-bg);
+  padding: 18px 22px;
+  border-radius: 18px;
+  line-height: 1.75;
+  font-size: 15px;
+  color: var(--text-dark);
+}
+.foods-tag {
+  display: inline-block;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  padding: 6px 18px;
+  border-radius: 40px;
+  font-size: 14px;
+  margin: 0 10px 12px 0;
+  transition: all 0.2s;
+}
+.recipe-box {
+  background: var(--secondary-light);
+  padding: 18px 24px;
+  border-radius: 20px;
+  line-height: 1.7;
+  font-size: 15px;
+  color: #7a6300;
+  border-left: 5px solid var(--secondary);
+}
+.warning-box {
+  background: #fef7e0;
+  border-left: 5px solid #e6a017;
+  padding: 16px 22px;
+  border-radius: 18px;
+  font-size: 14px;
+  color: #8a6e2e;
+  line-height: 1.6;
+}
+
+/* 医案/方剂详情页样式 */
+.case-detail-card, .formula-detail-card {
+  background: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.case-header, .formula-header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  padding: 32px 28px;
+  color: white;
+}
+.case-header .case-title, .formula-header .formula-name {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.case-body, .formula-body {
+  padding: 32px 32px;
+}
+.case-section, .formula-section {
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--gray-border);
+}
+.case-section:last-child, .formula-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.case-section-title, .formula-section-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.case-section-title::before, .formula-section-title::before {
+  content: '';
+  width: 4px;
+  height: 18px;
+  background: var(--primary);
+  border-radius: 2px;
+}
+.case-text {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-dark);
+  background: var(--gray-bg);
+  padding: 16px 20px;
+  border-radius: 14px;
+  margin-top: 4px;
+}
+.symptoms-text {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-dark);
+  background: var(--gray-bg);
+  padding: 16px 20px;
+  border-radius: 14px;
+  margin-top: 4px;
+}
+.herb-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+.herb-item {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  padding: 8px 18px;
+  border-radius: 40px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.herb-item:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-1px);
+}
+.effect-text {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-dark);
+  background: var(--gray-bg);
+  padding: 16px 20px;
+  border-radius: 14px;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--primary-dark); color: white; padding: 10px 24px; border-radius: 30px; font-size: 14px; z-index: 2000; animation: fadeOut 2s ease forwards; }
+@keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+
+/* 我的页面 - 恢复原来的简洁卡片式布局 */
+.profile-card {
+  background: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-border);
+}
+.profile-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--gray-border);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.profile-item:last-child {
+  border-bottom: none;
+}
+.profile-item:hover {
+  background: var(--gray-bg);
+}
+.profile-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--primary-light);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+.profile-info {
+  flex: 1;
+}
+.profile-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+.profile-desc {
+  font-size: 12px;
+  color: var(--text-gray);
+}
+.profile-arrow {
+  font-size: 20px;
+  color: var(--text-light);
+}
+
+/* 列表页面样式（收藏、历史） */
+.list-page {
+  background: white;
+  border-radius: var(--radius);
+  padding: 0;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-border);
+  overflow: hidden;
+}
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--gray-border);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.list-item:last-child {
+  border-bottom: none;
+}
+.list-item:hover {
+  background: var(--gray-bg);
+}
+.list-item-content {
+  flex: 1;
+}
+.list-item-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+.list-item-time {
+  font-size: 11px;
+  color: var(--text-light);
+}
+.list-item-delete {
+  color: var(--text-light);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.list-item:hover .list-item-delete {
+  opacity: 1;
+}
+.list-item-delete:hover {
+  color: #f44336;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-gray);
+}
+
+.feedback-form {
+  background: white;
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-border);
+}
+.feedback-textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 14px;
+  font-size: 14px;
+  border: 1px solid var(--gray-border);
+  border-radius: 12px;
+  resize: vertical;
+  font-family: inherit;
+  outline: none;
+}
+.feedback-textarea:focus {
+  border-color: var(--primary);
+}
+.feedback-submit {
+  margin-top: 18px;
+  padding: 10px 28px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+.feedback-submit:hover {
+  background: var(--primary-dark);
+}
+
+.result-card { background: white; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 12px; border-left: 3px solid var(--primary); cursor: pointer; transition: all 0.2s; }
+.result-card:hover { transform: translateX(4px); box-shadow: var(--shadow-hover); }
+.back-button, .export-btn { background: var(--gray-bg); border: 1px solid var(--gray-border); padding: 8px 20px; border-radius: 30px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+.back-button:hover { background: var(--gray-border); }
+.export-btn { background: var(--primary); color: white; border: none; }
+.export-btn:hover { background: var(--primary-dark); }
+
+.results-header {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer {
+  text-align: center;
+  padding: 24px 20px;
+  font-size: 12px;
+  color: var(--text-light);
+  border-top: 1px solid var(--gray-border);
+  margin-top: 32px;
+}
+
+@media (max-width: 900px) { .sidebar { display: none; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .jieqi-row { grid-template-columns: repeat(3, 1fr); } .recommend-feature-text { max-width: 100%; } .recommend-jieqi-name { font-size: 32px; } .jieqi-detail-body { padding: 20px; } .jieqi-header { padding: 24px 20px; } .case-body, .formula-body { padding: 24px 20px; } }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo" onclick="showPage('home')">
+    <div class="logo-icon">🌿</div>
+    <div><div class="logo-text">本草问诊</div><div class="logo-sub">中医药辅助诊疗系统</div></div>
+  </div>
+  <div class="header-search">
+    <input type="text" id="headerSearchInput" placeholder="输入方剂名或症状，如：归脾汤、失眠..." 
+           onkeydown="if(event.key==='Enter') doSearch(this.value)"
+           oninput="onSearchInput(this.value)">
+    <button onclick="doSearch(document.getElementById('headerSearchInput').value)">🔍</button>
+    <div class="search-suggestions" id="searchSuggestions"></div>
+  </div>
+  <div class="nav-links">
+    <span class="nav-link active" onclick="showPage('home')">首页</span>
+    <span class="nav-link" onclick="showPage('profile')">我的</span>
+  </div>
+</header>
+
+<div class="main-container">
+  <aside class="sidebar"><div class="health-tip-card"><div class="health-tip-title">💡 养生小知识</div><div class="health-tip-content" id="healthTipContent"></div><button class="refresh-tip" onclick="refreshHealthTip()">换一换</button></div></aside>
+  <div class="content">
+    <div class="page active" id="pageHome">
+      <div class="stats-grid"><div class="stat-card"><div class="stat-icon">📋</div><div><div class="stat-number" id="heroStatCount">-</div><div class="stat-label">医案数据</div></div></div><div class="stat-card"><div class="stat-icon">🌿</div><div><div class="stat-number" id="heroFormulaCount">-</div><div class="stat-label">方剂收录</div></div></div><div class="stat-card"><div class="stat-icon">🔍</div><div><div class="stat-number">智能</div><div class="stat-label">症状检索</div></div></div><div class="stat-card"><div class="stat-icon">💊</div><div><div class="stat-number">推荐</div><div class="stat-label">方剂建议</div></div></div></div>
+      <div class="hot-search-section"><div class="hot-search-title">热门搜索</div><div class="hot-search-grid" id="hotSearchGrid"></div></div>
+      <div id="smartJieqiRecommend"></div>
+      <div class="calendar-table"><div class="calendar-title">二十四节气养生大全</div><div id="jieqiCalendar"></div></div>
+    </div>
+    <div class="page" id="pageResults"><div class="results-header"><div><div style="font-size: 20px; font-weight: 700;" id="resultsQuery">搜索结果</div><div class="results-count" id="resultsCount">共 0 条结果</div></div><div><button class="back-button" onclick="goBackFromResults()">返回首页</button></div></div><div id="resultsList"></div></div>
+    <div class="page" id="pageDetail"><div class="results-header"><div></div><div><button class="export-btn" onclick="exportCurrent()">导出</button><button class="back-button" onclick="goBackFromDetail()">返回</button></div></div><div id="detailContainer"></div></div>
+    <div class="page" id="pageJieqiDetail"><div class="results-header"><div></div><button class="back-button" onclick="backToHome()">返回首页</button></div><div id="jieqiDetailContainer"></div></div>
+    
+    <!-- 我的页面 - 恢复原来的简洁卡片式布局 -->
+    <div class="page" id="pageProfile">
+      <div class="profile-card">
+        <div class="profile-item" onclick="showFavorites()">
+          <div class="profile-icon">❤️</div>
+          <div class="profile-info">
+            <div class="profile-title">收藏</div>
+            <div class="profile-desc">收藏的方剂和医案</div>
+          </div>
+          <div class="profile-arrow">›</div>
+        </div>
+        <div class="profile-item" onclick="showHistory()">
+          <div class="profile-icon">🕐</div>
+          <div class="profile-info">
+            <div class="profile-title">历史</div>
+            <div class="profile-desc">最近的搜索记录</div>
+          </div>
+          <div class="profile-arrow">›</div>
+        </div>
+        <div class="profile-item" onclick="showFeedback()">
+          <div class="profile-icon">📝</div>
+          <div class="profile-info">
+            <div class="profile-title">意见反馈</div>
+            <div class="profile-desc">告诉我们你的建议</div>
+          </div>
+          <div class="profile-arrow">›</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="pageFavorites"><div class="results-header"><div><div style="font-size:20px; font-weight:700;">我的收藏</div><div class="results-count" id="favoritesCount">共 0 条收藏</div></div><button class="back-button" onclick="goBackToProfile()">← 返回</button></div><div id="favoritesList" class="list-page"></div></div>
+    <div class="page" id="pageHistory"><div class="results-header"><div><div style="font-size:20px; font-weight:700;">搜索历史</div><div class="results-count" id="historyCount">共 0 条记录</div></div><div><button class="back-button" onclick="clearHistory()">清空历史</button><button class="back-button" onclick="goBackToProfile()">← 返回</button></div></div><div id="historyList" class="list-page"></div></div>
+    <div class="page" id="pageFeedback"><div class="results-header"><div><div style="font-size:20px; font-weight:700;">意见反馈</div><div class="results-count">我们非常重视你的意见</div></div><button class="back-button" onclick="goBackToProfile()">← 返回</button></div><div class="feedback-form"><textarea id="feedbackContent" class="feedback-textarea" placeholder="请告诉我们你的建议、意见或遇到的问题..."></textarea><button class="feedback-submit" onclick="submitFeedback()">提交反馈</button></div></div>
+  </div>
+</div>
+<footer class="footer">本草问诊 · 基于真实医案数据 · 内容仅供参考，不替代正规医疗诊断</footer>
+
+<script>
+// ======================== 二十四节气数据 ====================
+const JIEQI_BG_IMAGES = {
+  "立春": "images/lichun.jpg", "雨水": "images/yushui.jpg", "惊蛰": "images/jingzhe.jpg", "春分": "images/chunfen.jpg",
+  "清明": "images/qingming.jpg", "谷雨": "images/guyu.jpg", "立夏": "images/lixia.jpg", "小满": "images/xiaoman.jpg",
+  "芒种": "images/mangzhong.jpg", "夏至": "images/xiazhi.jpg", "小暑": "images/xiaoshu.jpg", "大暑": "images/dashu.jpg",
+  "立秋": "images/liqiu.jpg", "处暑": "images/chushu.jpg", "白露": "images/bailu.jpg", "秋分": "images/qiufen.jpg",
+  "寒露": "images/hanlu.jpg", "霜降": "images/shuangjiang.jpg", "立冬": "images/lidong.jpg", "小雪": "images/xiaoxue.jpg",
+  "大雪": "images/daxue.jpg", "冬至": "images/dongzhi.jpg", "小寒": "images/xiaohan.jpg", "大寒": "images/dahan.jpg"
+};
+const JIEQI_BRIEF = { "立春":"立春阳气生，护肝升阳，韭菜豆芽助生发。","雨水":"雨水乍暖还寒，宜春捂防寒，多吃山药薏米。","惊蛰":"惊蛰春雷动，肝阳升发，吃梨润燥养正气。","春分":"春分阴阳平，调和肝脾，食甘少酸踏青怡情。","清明":"清明柔肝养肺，荠菜香椿正当时，避发物防过敏。","谷雨":"谷雨湿气渐重，健脾祛湿、疏肝清热。","立夏":"立夏养心护阳，午间小憩，食莲子百合。","小满":"小满健脾祛湿宜冬瓜薏米，忌贪凉饮冷。","芒种":"芒种清热解暑，绿豆荷叶消暑，午休养心。","夏至":"夏至养心宁神，冬病夏治，吃苦瓜莲子。","小暑":"小暑清热祛湿，冬瓜薏米汤，心静自然凉。","大暑":"大暑祛湿健脾，三豆汤度苦夏。","立秋":"立秋滋阴润肺，银耳雪梨润燥，少辛增酸。","处暑":"处暑润燥安神，莲藕蜂蜜润肺，解秋乏。","白露":"白露滋阴润肺，多吃梨芝麻，腹部保暖。","秋分":"秋分润肺平衡阴阳，百合银耳润燥登高。","寒露":"寒露养阴防燥，芝麻核桃润肺，足部保暖。","霜降":"霜降健脾养胃，山药栗子温补，忌生冷。","立冬":"立冬补肾藏精，羊肉核桃温阳，早卧晚起。","小雪":"小雪温补肾阳，黑豆红枣助阳，多晒太阳。","大雪":"大雪温阳固本，桂圆红枣茶暖身。","冬至":"冬至温补脾肾，饺子羊肉汤，静养潜藏。","小寒":"小寒温阳散寒，生姜羊肉暖中。","大寒":"大寒温补脾肾，糯米八宝饭补益。" };
+const JIEQI_DETAIL_MAP = {
+  "立春": { principle:"护肝养阳，升发阳气", foods:["韭菜","豆芽","春笋","红枣"], recipe:"韭菜炒鸡蛋", warning:"忌食酸收之味", healthTips:"夜卧早起，广步于庭", details:"立春标志着春季开始，阳气初生。" },
+  "雨水": { principle:"健脾祛湿，调养脾胃", foods:["山药","薏米","小米","南瓜"], recipe:"山药薏米粥", warning:"注意保暖，防倒春寒", healthTips:"春捂防寒", details:"雨水时节湿气渐重，易伤脾胃。" },
+  "惊蛰": { principle:"疏肝健脾，升阳润燥", foods:["梨","山药","春笋","韭菜"], recipe:"雪梨银耳羹", warning:"忌生冷油腻", healthTips:"适当运动", details:"惊蛰万物复苏，肝气旺盛。" },
+  "春分": { principle:"调和阴阳，平衡肝脾", foods:["豆芽","莴笋","草莓","蜂蜜"], recipe:"蜂蜜柠檬水", warning:"饮食宜清淡", healthTips:"早睡早起", details:"春分昼夜平分。" },
+  "清明": { principle:"柔肝养肺，清热祛湿", foods:["荠菜","香椿","山药","百合"], recipe:"荠菜豆腐汤", warning:"忌发物，防过敏", healthTips:"踏青散步", details:"清明气候多变。" },
+  "谷雨": { principle:"健脾祛湿，疏肝养脾", foods:["赤小豆","茯苓","山药","薏米"], recipe:"赤小豆汤", warning:"忌生冷冰饮", healthTips:"适当运动", details:"谷雨是春季最后一个节气。" },
+  "立夏": { principle:"养心护阳，清心降火", foods:["莲子","百合","苦瓜","绿豆"], recipe:"莲子百合粥", warning:"忌贪凉饮冷", healthTips:"午间小憩", details:"立夏标志着夏季开始。" },
+  "小满": { principle:"清热利湿，健脾和胃", foods:["冬瓜","绿豆","黄瓜","薏米"], recipe:"绿豆冬瓜汤", warning:"防湿热", healthTips:"及时补水", details:"小满气温升高，湿气渐重。" },
+  "芒种": { principle:"清热解暑，健脾祛湿", foods:["绿豆","西瓜","苦瓜","荷叶"], recipe:"绿豆汤", warning:"忌油腻", healthTips:"避免中暑", details:"芒种天气炎热。" },
+  "夏至": { principle:"养心安神，清热解暑", foods:["莲子","百合","苦瓜","绿豆"], recipe:"百合糖水", warning:"忌暴饮暴食", healthTips:"冬病夏治", details:"夏至阳气最盛。" },
+  "小暑": { principle:"清热解暑，养心安神", foods:["绿豆","冬瓜","西瓜","莲子"], recipe:"冬瓜汤", warning:"防中暑", healthTips:"保持平静", details:"小暑天气炎热。" },
+  "大暑": { principle:"清热祛湿，健脾和胃", foods:["薏米","赤小豆","绿豆","冬瓜"], recipe:"三豆汤", warning:"忌贪凉", healthTips:"避免暴晒", details:"大暑最热时节。" },
+  "立秋": { principle:"滋阴润肺，收敛阳气", foods:["梨","百合","银耳","山药"], recipe:"银耳羹", warning:"忌辛辣", healthTips:"早睡早起", details:"立秋标志着秋季开始。" },
+  "处暑": { principle:"润燥养肺，清热安神", foods:["梨","莲藕","百合","蜂蜜"], recipe:"莲藕汤", warning:"防秋乏", healthTips:"增加睡眠", details:"处暑暑气渐消。" },
+  "白露": { principle:"滋阴润燥，养肺生津", foods:["梨","银耳","百合","芝麻"], recipe:"雪梨汤", warning:"忌生冷", healthTips:"注意保暖", details:"白露昼夜温差大。" },
+  "秋分": { principle:"滋阴润肺，平衡阴阳", foods:["百合","银耳","山药","梨"], recipe:"百合羹", warning:"忌辛辣", healthTips:"心情平和", details:"秋分昼夜平分。" },
+  "寒露": { principle:"滋阴润燥，养护肺气", foods:["芝麻","核桃","银耳","梨"], recipe:"芝麻糊", warning:"防秋燥", healthTips:"足部保暖", details:"寒露天气转凉。" },
+  "霜降": { principle:"健脾养胃，温补润燥", foods:["山药","红薯","栗子","南瓜"], recipe:"栗子粥", warning:"忌生冷", healthTips:"霜降进补", details:"霜降秋季最后一个节气。" },
+  "立冬": { principle:"补肾藏精，温补阳气", foods:["羊肉","核桃","黑芝麻","枸杞"], recipe:"羊肉汤", warning:"忌过食辛辣", healthTips:"早睡晚起", details:"立冬标志着冬季开始。" },
+  "小雪": { principle:"温补肾阳，养藏精气", foods:["黑豆","核桃","羊肉","萝卜"], recipe:"萝卜炖羊肉", warning:"忌过食燥热", healthTips:"心情愉悦", details:"小雪天气寒冷。" },
+  "大雪": { principle:"温阳补肾，固本培元", foods:["羊肉","红枣","桂圆","核桃"], recipe:"红枣茶", warning:"防寒保暖", healthTips:"适当进补", details:"大雪气温下降。" },
+  "冬至": { principle:"温补阳气，养肾固本", foods:["羊肉","饺子","桂圆","红枣"], recipe:"饺子汤", warning:"忌过度进补", healthTips:"静养为主", details:"冬至白天最短。" },
+  "小寒": { principle:"温阳散寒，补肾健脾", foods:["羊肉","生姜","红枣","枸杞"], recipe:"生姜茶", warning:"防寒保暖", healthTips:"避免剧烈运动", details:"小寒最冷时节。" },
+  "大寒": { principle:"温补脾肾，储备阳气", foods:["糯米","红枣","桂圆","羊肉"], recipe:"八宝饭", warning:"忌暴饮暴食", healthTips:"静待春归", details:"大寒最后一个节气。" }
+};
+const PRECISE_JIEQI_DATES = { "立春":"2月3日","雨水":"2月18日","惊蛰":"3月5日","春分":"3月20日","清明":"4月4日","谷雨":"4月19日","立夏":"5月5日","小满":"5月20日","芒种":"6月5日","夏至":"6月21日","小暑":"7月7日","大暑":"7月22日","立秋":"8月7日","处暑":"8月22日","白露":"9月7日","秋分":"9月22日","寒露":"10月8日","霜降":"10月23日","立冬":"11月7日","小雪":"11月22日","大雪":"12月6日","冬至":"12月21日","小寒":"1月5日","大寒":"1月20日" };
+const JIEQI_ORDER = ["立春","雨水","惊蛰","春分","清明","谷雨","立夏","小满","芒种","夏至","小暑","大暑","立秋","处暑","白露","秋分","寒露","霜降","立冬","小雪","大雪","冬至","小寒","大寒"];
+
+function getNextJieqi() { const today=new Date(); const year=today.getFullYear(); const now=today.getTime(); let candidates=[]; for(let name of JIEQI_ORDER){ let [month,day]=PRECISE_JIEQI_DATES[name].split(/月|日/).filter(s=>s.trim()).map(v=>parseInt(v)); let targetYear=year; if((name==="小寒"||name==="大寒")&&month===1){ if(today.getMonth()===0&&today.getDate()>day) targetYear=year+1; else if(today.getMonth()>0) targetYear=year+1; else targetYear=year; }else{ if(today.getMonth()>month-1||(today.getMonth()===month-1&&today.getDate()>day)) targetYear=year+1; else targetYear=year; } let targetDate=new Date(targetYear,month-1,day); if(!isNaN(targetDate)&&targetDate>=now) candidates.push({name,date:targetDate}); } if(candidates.length===0) candidates.push({name:"立春",date:new Date(year+1,1,3)}); candidates.sort((a,b)=>a.date-b.date); return candidates[0]; }
+function renderSmartRecommendation() { const next=getNextJieqi(); if(!next) return; const bgUrl=JIEQI_BG_IMAGES[next.name]||"https://picsum.photos/id/104/800/500"; const brief=JIEQI_BRIEF[next.name]||`${next.name}时节，顺应天时。`; const dateObj=next.date; const dateStr=`${dateObj.getFullYear()}年${dateObj.getMonth()+1}月${dateObj.getDate()}日`; const weekdays=["星期日","星期一","星期二","星期三","星期四","星期五","星期六"]; const weekday=weekdays[dateObj.getDay()]; document.getElementById('smartJieqiRecommend').innerHTML=`<div class="jieqi-recommend-card" style="background-image: url('${bgUrl}'); background-size: cover; background-position: center 30%;"><div class="recommend-overlay"><div class="recommend-badge-date">${dateStr} · ${weekday}</div><div class="recommend-jieqi-name">${next.name}</div><div class="recommend-feature-text">${brief}</div><button class="recommend-detail-btn" onclick="event.stopPropagation(); showJieqiDetail('${next.name}')">📖 查看食疗方案 →</button></div></div>`; }
+function showJieqiDetail(name) { const detail=JIEQI_DETAIL_MAP[name]||JIEQI_DETAIL_MAP["立春"]; const exactDate=PRECISE_JIEQI_DATES[name]||""; document.getElementById('jieqiDetailContainer').innerHTML=`<div class="jieqi-detail"><div class="jieqi-header"><div class="jieqi-detail-name">${name}</div><div class="jieqi-detail-time">${exactDate}</div><div class="jieqi-detail-principle">养生原则：${detail.principle}</div></div><div class="jieqi-detail-body"><div class="jieqi-section"><div class="jieqi-section-title">节气详解</div><div class="detail-content">${detail.details||''}</div></div><div class="jieqi-section"><div class="jieqi-section-title">推荐食材</div><div>${detail.foods.map(f=>`<span class="foods-tag">${f}</span>`).join('')}</div></div><div class="jieqi-section"><div class="jieqi-section-title">推荐食谱</div><div class="recipe-box">${detail.recipe}</div></div><div class="jieqi-section"><div class="jieqi-section-title">注意事项</div><div class="warning-box">${detail.warning}</div></div><div class="jieqi-section"><div class="jieqi-section-title">养生小贴士</div><div class="detail-content">${detail.healthTips||''}</div></div></div></div>`; document.getElementById('pageJieqiDetail').classList.add('active'); document.getElementById('pageHome').classList.remove('active'); document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); document.querySelector('.nav-link').classList.add('active'); window.scrollTo({top:0}); }
+function renderJieqiCalendar() { const container=document.getElementById('jieqiCalendar'); const next=getNextJieqi(); const nextName=next?next.name:null; let html=''; for(let i=0;i<4;i++){ html+='<div class="jieqi-row">'; for(let j=0;j<6;j++){ const idx=i*6+j; if(idx<JIEQI_ORDER.length){ const name=JIEQI_ORDER[idx]; const dateInfo=PRECISE_JIEQI_DATES[name]||''; const isHighlight=(name===nextName); html+=`<div class="jieqi-cell ${isHighlight?'highlight':''}" onclick="showJieqiDetail('${name}')"><div class="jieqi-cell-name">${name}</div><div class="jieqi-cell-date">${dateInfo}</div></div>`; } } html+='</div>'; } container.innerHTML=html; }
+
+// 症状清洗函数
+function cleanSymptomsText(s) {
+  if(!s) return '';
+  let text = s;
+  text = text.replace(/基本信息[:：]\s*/g, '');
+  text = text.replace(/主诉[:：]\s*/g, '');
+  text = text.replace(/上次就诊内容[:：]\s*/g, '');
+  text = text.replace(/年龄[:：]\s*\d+\s*岁?/g, '');
+  text = text.replace(/年龄\s*\d+/g, '');
+  text = text.replace(/性别[:：]\s*[男女]/g, '');
+  text = text.replace(/身高[:：]\s*[\d\.]+\s*(?:cm|厘米)?/g, '');
+  text = text.replace(/身高\s*[\d\.]+/g, '');
+  text = text.replace(/体重[:：]\s*[\d\.]+\s*(?:kg|千克)?/g, '');
+  text = text.replace(/体重\s*[\d\.]+/g, '');
+  text = text.replace(/现病史[:：]\s*/g, '');
+  text = text.replace(/体格检查[:：]\s*/g, '');
+  text = text.replace(/舌[:：][^，,。；;]*/g, '');
+  text = text.replace(/脉[:：][^，,。；;]*/g, '');
+  text = text.replace(/舌苔[^，,。；;]*/g, '');
+  text = text.replace(/\s+/g, ' ').trim();
+  text = text.replace(/^[,，、\s]+/, '').replace(/[,，、\s]+$/, '');
+  if(text.length>400) text = text.substring(0,400)+'…';
+  return text || '（无详细症状描述）';
+}
+function cleanHerbName(herbStr) {
+  if(!herbStr) return [];
+  let herbs = herbStr.split(/\s+/);
+  let cleaned = [];
+  for(let h of herbs){
+    if(!h.trim()) continue;
+    let name = h.replace(/[\d\.]+(?:g|克|ml|毫升)?/g, '').trim();
+    name = name.replace(/[.,，。]$/, '');
+    if(name && name.length>0 && name.length<20 && !name.match(/^[0-9]+$/)) {
+      cleaned.push(name);
+    }
+  }
+  return [...new Map(cleaned.map(h=>[h,h])).values()];
+}
+
+let fullData=[], formulaDatabase={}, currentItem=null, currentMode=null, favorites=[], searchHistory=[];
+const HEALTH_TIPS=["晨起一杯温水助代谢。","春养肝夏养心，顺时调养。","睡前泡脚改善睡眠。","按揉足三里健脾益气。","药食同源，红枣枸杞补气血。"];
+let currentTipIndex=0;
+function refreshHealthTip(){ currentTipIndex=(currentTipIndex+1)%HEALTH_TIPS.length; document.getElementById('healthTipContent').innerHTML=HEALTH_TIPS[currentTipIndex]; }
+function initStorage(){ const f=localStorage.getItem('tcm_favorites'); if(f) favorites=JSON.parse(f); const h=localStorage.getItem('tcm_searchHistory'); if(h) searchHistory=JSON.parse(h); }
+function saveFavorites(){ localStorage.setItem('tcm_favorites',JSON.stringify(favorites)); }
+function saveHistory(){ localStorage.setItem('tcm_searchHistory',JSON.stringify(searchHistory)); }
+function addToHistory(q){ if(!q.trim()) return; searchHistory=searchHistory.filter(h=>h.keyword!==q); searchHistory.unshift({keyword:q,time:new Date().toLocaleString()}); if(searchHistory.length>20) searchHistory.pop(); saveHistory(); }
+function addToFavorite(item,type,name){ if(favorites.some(f=>f.name===name)){ showToast('已在收藏夹'); return false; } favorites.push({name,type,data:item,time:new Date().toLocaleString()}); saveFavorites(); showToast('已收藏'); return true; }
+function removeFromFavorite(name){ favorites=favorites.filter(f=>f.name!==name); saveFavorites(); showToast('已取消收藏'); if(document.getElementById('pageFavorites').classList.contains('active')) renderFavoritesList(); }
+function isFavorited(name){ return favorites.some(f=>f.name===name); }
+function showFavorites(){ renderFavoritesList(); showPage('favorites'); }
+function renderFavoritesList(){ const c=document.getElementById('favoritesList'); document.getElementById('favoritesCount').innerHTML=`共 ${favorites.length} 条收藏`; if(!favorites.length){ c.innerHTML='<div class="empty-state">暂无收藏</div>'; return; } c.innerHTML=favorites.map(fav=>`<div class="list-item" onclick="viewFavorite('${fav.name}')"><div class="list-item-content"><div class="list-item-title">${fav.name}</div><div class="list-item-time">${fav.type==='formula'?'方剂':'医案'} · ${fav.time}</div></div><div class="list-item-delete" onclick="event.stopPropagation();removeFromFavorite('${fav.name}')">删除</div></div>`).join(''); }
+function viewFavorite(name){ const fav=favorites.find(f=>f.name===name); if(!fav) return; if(fav.type==='formula' && formulaDatabase[fav.name]){ currentItem=formulaDatabase[fav.name]; currentMode='formula'; showFormulaDetail(currentItem); showPage('detail'); } else if(fav.data){ currentItem=fav.data; currentMode='case'; showCaseDetailFromItem(fav.data); showPage('detail'); } }
+function showHistory(){ renderHistoryList(); showPage('history'); }
+function renderHistoryList(){ const c=document.getElementById('historyList'); document.getElementById('historyCount').innerHTML=`共 ${searchHistory.length} 条记录`; if(!searchHistory.length){ c.innerHTML='<div class="empty-state">暂无历史</div>'; return; } c.innerHTML=searchHistory.map(h=>`<div class="list-item" onclick="doSearch('${h.keyword}')"><div class="list-item-content"><div class="list-item-title">🔍 ${h.keyword}</div><div class="list-item-time">${h.time}</div></div></div>`).join(''); }
+function clearHistory(){ if(confirm('清空历史?')){ searchHistory=[]; saveHistory(); renderHistoryList(); showToast('已清空'); } }
+function showFeedback(){ showPage('feedback'); }
+function submitFeedback(){ const content=document.getElementById('feedbackContent').value.trim(); if(!content){ showToast('请输入反馈'); return; } let fb=[]; const saved=localStorage.getItem('tcm_feedbacks'); if(saved) fb=JSON.parse(saved); fb.unshift({content,time:new Date().toLocaleString()}); localStorage.setItem('tcm_feedbacks',JSON.stringify(fb)); document.getElementById('feedbackContent').value=''; showToast('感谢反馈'); }
+function buildFormulaDatabase(data){ let temp={}; for(let item of data){ let fn=item.formula; if(fn&&fn!=='null'&&fn!=='undefined'){ let name=fn.split(/[\s,，、]/)[0].trim(); if(name.length>2&&!temp[name]) temp[name]={name, herbs:cleanHerbName(item.herbs||''), effect:(item.diagnosis||'').replace(/^证型[:：]/,'')}; } } return temp; }
+async function loadData(){ initStorage(); try{ const resp=await fetch('medical_records.json'); if(!resp.ok) throw new Error('模拟数据'); const txt=await resp.text(); fullData=txt.trim().startsWith('[')?JSON.parse(txt):txt.split('\n').filter(l=>l.trim()).map(l=>JSON.parse(l)); formulaDatabase=buildFormulaDatabase(fullData); document.getElementById('heroStatCount').innerHTML=fullData.length; document.getElementById('heroFormulaCount').innerHTML=Object.keys(formulaDatabase).length; document.getElementById('hotSearchGrid').innerHTML=["归脾汤","桂枝汤","六味地黄丸","失眠","咳嗽","胃痛"].map(t=>`<button class="hot-search-item" onclick="doSearch('${t}')">${t}</button>`).join(''); refreshHealthTip(); window.suggestionFormulas=Object.keys(formulaDatabase); renderJieqiCalendar(); renderSmartRecommendation(); }catch(e){ console.warn(e); fullData=[]; } }
+function doSearch(q){ if(!q.trim()) return; addToHistory(q); if(formulaDatabase[q]){ currentItem=formulaDatabase[q]; currentMode='formula'; showFormulaDetail(currentItem); showPage('detail'); return; } let kw=q.toLowerCase(); let res=fullData.filter(item=>(item.symptoms||'').toLowerCase().includes(kw)||(item.diagnosis||'').toLowerCase().includes(kw)).slice(0,20); document.getElementById('resultsQuery').innerHTML=`“${q}” 检索结果`; document.getElementById('resultsCount').innerHTML=`共 ${res.length} 条`; let c=document.getElementById('resultsList'); if(!res.length) c.innerHTML='<div class="empty-state">无结果</div>'; else c.innerHTML=res.map((item,idx)=>`<div class="result-card" onclick="showCaseDetail(${idx})"><div class="result-name">${item.diagnosis?.replace(/^证型[:：]/,'')||'医案'}</div><div class="result-type">方剂：${item.formula?.split(/[\s,，、]/)[0]||''}</div><button class="export-btn" style="margin-top:8px;padding:5px 14px;font-size:12px;" onclick="event.stopPropagation();addToFavorite(item,'case','${item.diagnosis?.replace(/^证型[:：]/,'')||'医案'}')">❤ 收藏</button></div>`).join(''); window.currentCases=res; showPage('results'); }
+function showFormulaDetail(f){ let favFlag=isFavorited(f.name); let herbsHtml=f.herbs?.length?`<div class="formula-section"><div class="formula-section-title">方剂组成</div><div class="herb-grid">${f.herbs.map(h=>`<span class="herb-item">${h}</span>`).join('')}</div></div>`:''; let effectHtml=f.effect&&f.effect!=='null'?`<div class="formula-section"><div class="formula-section-title">功效</div><div class="effect-text">${f.effect}</div></div>`:''; document.getElementById('detailContainer').innerHTML=`<div class="formula-detail-card"><div class="formula-header"><div class="formula-name">${f.name}</div></div><div class="formula-body">${herbsHtml}${effectHtml}<div style="text-align:center; margin-top:24px;"><button class="export-btn" onclick="toggleFavoriteFormula('${f.name}')">${favFlag?'❤ 已收藏':'☆ 收藏'}</button></div></div></div>`; showPage('detail'); }
+function toggleFavoriteFormula(name){ if(isFavorited(name)) removeFromFavorite(name); else addToFavorite({},'formula',name); if(currentItem?.name===name) showFormulaDetail(currentItem); }
+function showCaseDetail(idx){ let item=window.currentCases[idx]; currentItem=item; currentMode='case'; let diag=item.diagnosis?.replace(/^证型[:：]/,'')||''; let fn=item.formula?.split(/[\s,，、]/)[0]||''; let itemName=diag||fn||'医案'; let cleaned=cleanHerbName(item.herbs||''); let symp=cleanSymptomsText(item.symptoms||''); let html=`<div class="case-detail-card"><div class="case-header"><div class="case-title">病情分析</div></div><div class="case-body">${diag?`<div class="case-section"><div class="case-section-title">证型诊断</div><div class="case-text">${diag}</div></div>`:''}${fn?`<div class="case-section"><div class="case-section-title">推荐方剂</div><div class="case-text">${fn}</div></div>`:''}${cleaned.length?`<div class="case-section"><div class="case-section-title">中药组成</div><div class="herb-grid">${cleaned.map(h=>`<span class="herb-item">${h}</span>`).join('')}</div></div>`:''}${symp?`<div class="case-section"><div class="case-section-title">症状表现</div><div class="symptoms-text">${symp}</div></div>`:''}<div style="text-align:center; margin-top:24px;"><button class="export-btn" onclick="toggleFavoriteCase('${itemName}')">${isFavorited(itemName)?'❤ 已收藏':'☆ 收藏'}</button></div></div></div>`; document.getElementById('detailContainer').innerHTML=html; showPage('detail'); }
+function showCaseDetailFromItem(item){ let diag=item.diagnosis?.replace(/^证型[:：]/,'')||''; let fn=item.formula?.split(/[\s,，、]/)[0]||''; let itemName=diag||fn||'医案'; let cleaned=cleanHerbName(item.herbs||''); let symp=cleanSymptomsText(item.symptoms||''); let html=`<div class="case-detail-card"><div class="case-header"><div class="case-title">病情分析</div></div><div class="case-body">${diag?`<div class="case-section"><div class="case-section-title">证型诊断</div><div class="case-text">${diag}</div></div>`:''}${fn?`<div class="case-section"><div class="case-section-title">推荐方剂</div><div class="case-text">${fn}</div></div>`:''}${cleaned.length?`<div class="case-section"><div class="case-section-title">中药组成</div><div class="herb-grid">${cleaned.map(h=>`<span class="herb-item">${h}</span>`).join('')}</div></div>`:''}${symp?`<div class="case-section"><div class="case-section-title">症状表现</div><div class="symptoms-text">${symp}</div></div>`:''}<div style="text-align:center; margin-top:24px;"><button class="export-btn" onclick="toggleFavoriteCase('${itemName}')">${isFavorited(itemName)?'❤ 已收藏':'☆ 收藏'}</button></div></div></div>`; document.getElementById('detailContainer').innerHTML=html; showPage('detail'); }
+function toggleFavoriteCase(name){ if(isFavorited(name)) removeFromFavorite(name); else addToFavorite(currentItem,'case',name); if(currentMode==='case') showCaseDetailFromItem(currentItem); }
+function exportCurrent(){ let text=''; if(currentMode==='formula') text=`方剂：${currentItem.name}\n组成：${currentItem.herbs?.join('、')||''}`; else text=`证型：${currentItem.diagnosis}\n方剂：${currentItem.formula}\n症状：${cleanSymptomsText(currentItem.symptoms)}`; navigator.clipboard.writeText(text); showToast('已复制'); }
+function showToast(msg){ let t=document.createElement('div'); t.className='toast'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2000); }
+function showPage(page){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(`page${page.charAt(0).toUpperCase()+page.slice(1)}`).classList.add('active'); if(page==='home') document.querySelector('.nav-link').classList.add('active'); if(page==='profile') document.querySelectorAll('.nav-link')[1].classList.add('active'); window.scrollTo({top:0}); }
+function goBackFromResults(){ showPage('home'); }
+function goBackFromDetail(){ showPage(currentMode==='formula'?'home':'results'); }
+function goBackToProfile(){ showPage('profile'); }
+function backToHome(){ showPage('home'); }
+function onSearchInput(v){ const sugDiv=document.getElementById('searchSuggestions'); if(!v.trim()){ sugDiv.classList.remove('show'); return; } const filtered=(window.suggestionFormulas||[]).filter(s=>s.includes(v)).slice(0,6); if(filtered.length){ sugDiv.innerHTML=filtered.map(s=>`<div class="suggestion-item" onclick="doSearch('${s}')">${s}</div>`).join(''); sugDiv.classList.add('show'); } else sugDiv.classList.remove('show'); }
+loadData();
+</script>
+</body>
+</html>
