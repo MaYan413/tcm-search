@@ -1,0 +1,19 @@
+# Render 部署配置
+# 在 render.com 注册 → New Web Service → 连接 GitHub 仓库 → 自动部署
+
+services:
+  - type: web
+    name: tcm-chat
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: LLM_API_KEY
+        sync: false
+        value: ""
+    plan: free
+    healthCheckPath: /api/health
