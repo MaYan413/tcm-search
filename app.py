@@ -1155,7 +1155,9 @@ def rule_based_chat(user_msg, messages):
 # ============================================================
 if __name__ == '__main__':
     import sys
-    is_prod = os.environ.get('FLASK_ENV') == 'production'
+    # Render 环境检测：Render 始终设置 RENDER=true
+    is_render = os.environ.get('RENDER', 'false').lower() == 'true'
+    is_prod = is_render or os.environ.get('FLASK_ENV') == 'production'
 
     print("=" * 60)
     print("  中医药辅助诊疗系统")
@@ -1169,4 +1171,5 @@ if __name__ == '__main__':
 
     host = '0.0.0.0' if is_prod else '127.0.0.1'
     port = int(os.environ.get('PORT', 5000))
+    print(f"启动: host={host}, port={port}, is_prod={is_prod}, is_render={is_render}")
     app.run(host=host, port=port, debug=not is_prod)
