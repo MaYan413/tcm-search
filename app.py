@@ -662,7 +662,7 @@ def rule_based_explain(term):
 # ============================================================
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-HTML_FILE = '中医药辅助诊疗系统（马妍修改版）.html'
+HTML_FILE = 'index.html'
 LLM_HTML_FILE = 'llm.html'
 
 @app.route('/')
