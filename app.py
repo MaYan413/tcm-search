@@ -38,14 +38,21 @@ USE_LLM = bool(LLM_API_KEY)
 session_store = {}
 
 # ============================================================
-# 数据加载
+# 数据加载（按需加载，避免免费版 Render 512MB 内存溢出）
 # ============================================================
 all_records = []
+_data_loaded = False
+_data_load_failed = False
 
 def load_all_data():
-    """加载全部16个JSON数据文件到内存"""
-    global all_records
+    """加载全部16个JSON数据文件到内存（仅在需要时调用）"""
+    global all_records, _data_loaded, _data_load_failed
+    if _data_loaded:
+        return
+    if _data_load_failed:
+        return
     all_records = []
+    loaded_count = 0
     for i in range(1, NUM_DATA_FILES + 1):
         filepath = os.path.join(DATA_DIR, f'medical_records_part{i}.json')
         if not os.path.exists(filepath):
@@ -54,11 +61,27 @@ def load_all_data():
         try:
             with open(filepath, 'r', encoding='utf-8') as f:
                 records = json.load(f)
-                all_records.extend(records)
-            logger.info(f'加载 {filepath}: {len(records)} 条记录')
+                # 只保留必要字段以节省内存
+                slim_records = []
+                for r in records:
+                    slim_records.append({
+                        'symptoms': r.get('symptoms', '') or '',
+                        'diagnosis': r.get('diagnosis', '') or '',
+                        'formula': r.get('formula', '') or '',
+                        'herbs': r.get('herbs', '') or '',
+                    })
+                all_records.extend(slim_records)
+                loaded_count += len(slim_records)
+            logger.info(f'加载 {os.path.basename(filepath)}: {len(records)} 条')
+        except MemoryError:
+            logger.error(f'内存不足，停止加载。已加载 {loaded_count} 条')
+            _data_load_failed = True
+            all_records = []
+            break
         except Exception as e:
             logger.error(f'加载 {filepath} 失败: {e}')
     logger.info(f'总计加载 {len(all_records)} 条医案记录')
+    _data_loaded = True
 
 
 def parse_symptoms_text(text):
@@ -672,7 +695,7 @@ def health_check():
     """健康检查"""
     return jsonify({
         'status': 'ok',
-        'total_records': len(all_records),
+        'total_records': len(all_records) if _data_loaded else 'lazy_loading',
         'llm_enabled': USE_LLM,
     })
 
@@ -683,6 +706,7 @@ def start_consultation():
     步骤1+2：接收基础信息和主诉，开始问诊
     返回候选病例数量和第一轮追问问题
     """
+    load_all_data()  # 按需加载数据
     data = request.get_json()
     if not data:
         return jsonify({'error': '请求数据为空'}), 400
@@ -769,6 +793,7 @@ def answer_followup():
     """
     步骤3：接收追问回答，返回下一轮追问或最终诊断
     """
+    load_all_data()  # 按需加载数据
     data = request.get_json()
     if not data:
         return jsonify({'error': '请求数据为空'}), 400
@@ -919,6 +944,7 @@ def explain_term():
 @app.route('/api/records_count', methods=['GET'])
 def records_count():
     """获取数据统计"""
+    load_all_data()
     return jsonify({
         'total_records': len(all_records),
         'data_files': NUM_DATA_FILES,
@@ -1129,13 +1155,12 @@ def rule_based_chat(user_msg, messages):
 # ============================================================
 if __name__ == '__main__':
     import sys
-    load_all_data()
     is_prod = os.environ.get('FLASK_ENV') == 'production'
 
     print("=" * 60)
     print("  中医药辅助诊疗系统")
     print("=" * 60)
-    print(f"  医案数据: {len(all_records)} 条")
+    print(f"  医案数据: 按需加载（启动时跳过以节省内存）")
     print(f"  LLM: {'DeepSeek (' + LLM_MODEL + ')' if USE_LLM else '规则引擎（无需 API Key）'}")
     print()
     print(f"  📋 规则引擎版（无需 Key）: http://127.0.0.1:5000/")
@@ -1145,6 +1170,3 @@ if __name__ == '__main__':
     host = '0.0.0.0' if is_prod else '127.0.0.1'
     port = int(os.environ.get('PORT', 5000))
     app.run(host=host, port=port, debug=not is_prod)
-else:
-    # flask run 方式启动时自动加载数据
-    load_all_data()
