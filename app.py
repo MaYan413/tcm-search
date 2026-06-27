@@ -952,6 +952,91 @@ def records_count():
     })
 
 
+@app.route('/api/search', methods=['POST'])
+def search_records():
+    """
+    服务端搜索医案数据（逐个文件加载，避免内存溢出）
+    """
+    data = request.get_json()
+    if not data or not data.get('query', '').strip():
+        return jsonify({'error': '查询内容为空'}), 400
+
+    query = data['query'].strip().lower()
+    max_results = data.get('max_results', 20)
+    results = []
+
+    for i in range(1, NUM_DATA_FILES + 1):
+        filepath = os.path.join(DATA_DIR, f'medical_records_part{i}.json')
+        if not os.path.exists(filepath):
+            continue
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                records = json.load(f)
+            for r in records:
+                sym = (r.get('symptoms', '') or '').lower()
+                diag = (r.get('diagnosis', '') or '').lower()
+                formula = (r.get('formula', '') or '').lower()
+                herbs = (r.get('herbs', '') or '').lower()
+                if query in sym or query in diag or query in formula:
+                    results.append({
+                        'symptoms': (r.get('symptoms', '') or '')[:500],
+                        'diagnosis': (r.get('diagnosis', '') or '')[:200],
+                        'formula': (r.get('formula', '') or '')[:200],
+                        'herbs': (r.get('herbs', '') or '')[:500],
+                    })
+                    if len(results) >= max_results:
+                        break
+            if len(results) >= max_results:
+                break
+        except MemoryError:
+            logger.error(f'搜索时内存不足，已返回 {len(results)} 条结果')
+            break
+        except Exception as e:
+            logger.error(f'搜索 {filepath} 出错: {e}')
+
+    # 统计总数（快速扫描，不加载详情）
+    total_matched = min(len(results) * 5, 2000)  # 估算值
+
+    return jsonify({
+        'results': results,
+        'count': len(results),
+        'query': query,
+    })
+
+
+@app.route('/api/formula', methods=['POST'])
+def lookup_formula():
+    """
+    根据方剂名称查找详细信息（逐个文件查找，找到即停）
+    """
+    data = request.get_json()
+    if not data or not data.get('name', '').strip():
+        return jsonify({'error': '方剂名称为空'}), 400
+
+    fname = data['name'].strip()
+    for i in range(1, NUM_DATA_FILES + 1):
+        filepath = os.path.join(DATA_DIR, f'medical_records_part{i}.json')
+        if not os.path.exists(filepath):
+            continue
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                records = json.load(f)
+            for r in records:
+                formula = (r.get('formula', '') or '').strip()
+                if formula.startswith(fname) or fname in formula.split():
+                    return jsonify({
+                        'found': True,
+                        'name': fname,
+                        'herbs': (r.get('herbs', '') or '')[:500],
+                        'diagnosis': (r.get('diagnosis', '') or '')[:200],
+                        'symptoms': (r.get('symptoms', '') or '')[:500],
+                    })
+        except Exception as e:
+            logger.error(f'查找方剂 {filepath} 出错: {e}')
+
+    return jsonify({'found': False, 'name': fname})
+
+
 @app.route('/api/chat', methods=['POST'])
 def ai_chat():
     """
@@ -1165,7 +1250,7 @@ if __name__ == '__main__':
     print(f"  医案数据: 按需加载（启动时跳过以节省内存）")
     print(f"  LLM: {'DeepSeek (' + LLM_MODEL + ')' if USE_LLM else '规则引擎（无需 API Key）'}")
     print()
-    print(f"  📋 规则引擎版（无需 Key）: http://127.0.0.1:5000/")
+    print(f"  📋 专业版（无需 Key）: http://127.0.0.1:5000/")
     print(f"  🧬 LLM 大模型版（需 Key）:  http://127.0.0.1:5000/llm")
     print("=" * 60)
 
