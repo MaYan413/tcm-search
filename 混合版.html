@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>专业版 · 本草问诊 | 中医药辅助诊疗系统 | 31万医案检索</title>
+<title>混合版 · 本草问诊 | AI诊疗 + 医案检索 + 节气养生</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -1036,8 +1036,9 @@ body {
   <div class="nav-links">
     <span class="nav-link active" onclick="showPage('home')">首页</span>
     <span class="nav-link" onclick="showPage('home');setTimeout(()=>document.getElementById('chatInput').scrollIntoView({behavior:'smooth',block:'center'}),100)">💬 AI诊疗</span>
+    <a class="nav-link" href="/">📋 专业版</a>
+    <a class="nav-link" href="/llm">🧬 LLM版</a>
     <span class="nav-link" onclick="showPage('profile')">我的</span>
-    <a class="nav-link" href="/llm" style="background:rgba(255,255,255,0.15);color:white;">🧬 LLM版</a>
   </div>
 </header>
 
@@ -1141,6 +1142,11 @@ body {
     <div class="page" id="pageHistory"><div class="results-header"><div><div style="font-size:20px; font-weight:700;">搜索历史</div><div class="results-count" id="historyCount">共 0 条记录</div></div><div><button class="back-button" onclick="clearHistory()">清空历史</button><button class="back-button" onclick="goBackToProfile()">← 返回</button></div></div><div id="historyList" class="list-page"></div></div>
     <div class="page" id="pageFeedback"><div class="results-header"><div><div style="font-size:20px; font-weight:700;">意见反馈</div><div class="results-count">我们非常重视你的意见</div></div><button class="back-button" onclick="goBackToProfile()">← 返回</button></div><div class="feedback-form"><textarea id="feedbackContent" class="feedback-textarea" placeholder="请告诉我们你的建议、意见或遇到的问题..."></textarea><button class="feedback-submit" onclick="submitFeedback()">提交反馈</button></div></div>
   </div>
+</div>
+<div style="text-align:center;padding:16px;background:var(--primary-light);border-radius:12px;margin-top:24px;font-size:13px;color:var(--text-gray);">
+  当前为 <b style="color:var(--primary-dark);">混合版</b> · 同时提供
+  <a href="/" style="color:var(--primary);font-weight:600;">📋 专业版</a> ·
+  <a href="/llm" style="color:var(--accent);font-weight:600;">🧬 LLM版</a>
 </div>
 <footer class="footer">本草问诊 · 基于真实医案数据 · 内容仅供参考，不替代正规医疗诊断</footer>
 

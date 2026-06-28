@@ -664,17 +664,17 @@ def rule_based_explain(term):
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_FILE = 'index.html'
 LLM_HTML_FILE = 'llm.html'
-HUANG_HTML_FILE = '专业版-黄永莲.html'
+HUNHE_HTML_FILE = '混合版.html'
 
 @app.route('/')
 def index():
     """专业版 — 无需 API Key"""
     return send_from_directory(BASE_DIR, HTML_FILE)
 
-@app.route('/huang')
-def huang_index():
-    """专业版（黄永莲版） — 无需 API Key"""
-    return send_from_directory(BASE_DIR, HUANG_HTML_FILE)
+@app.route('/hunhe')
+def hunhe_index():
+    """混合版 — AI诊疗 + 医案检索 + 节气养生"""
+    return send_from_directory(BASE_DIR, HUNHE_HTML_FILE)
 
 @app.route('/llm')
 def llm_index():
