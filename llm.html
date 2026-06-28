@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>本草 AI · 大模型深度诊疗 | DeepSeek 驱动</title>
+<title>本草问诊AI · 大模型深度诊疗 | DeepSeek 驱动</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -159,7 +159,7 @@ body {
 <header class="header">
   <a class="logo" href="/">
     <div class="logo-icon">🌿</div>
-    <div><div class="logo-text">本草 AI</div><div class="logo-sub">DeepSeek · 大模型诊断</div></div>
+    <div><div class="logo-text">本草问诊AI</div><div class="logo-sub">AI 大模型深度诊疗</div></div>
   </a>
   <div style="display:flex;align-items:center;gap:12px;">
     <span class="badge-llm">LLM 增强版</span>
@@ -197,7 +197,7 @@ body {
       <div class="chat-msg ai">
         <div class="chat-avatar">🌿</div>
         <div class="chat-bubble" style="font-size:15px;line-height:1.8;">
-          您好，我是<b>本草 AI · 大模型版</b>，由 DeepSeek 驱动。🌿<br><br>
+          您好，我是<b>本草问诊AI · 大模型版</b>，由 DeepSeek 驱动。🌿<br><br>
           与专业版不同，我将为您提供：<br>
           🔮 <b>深度辨证分析</b>（结合您的具体体质）<br>
           📜 <b>个性化方药推荐</b>（参考 31 万例医案）<br>
@@ -240,8 +240,9 @@ function addMessage(role, content){
   const avatarIcon = role==='ai' ? '🌿' : '👤';
   const cls = role==='ai' ? 'ai' : 'user';
   let cleaned = content.replace(/\*\*/g,'').replace(/\*/g,'');
+  cleaned = cleaned.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   cleaned = cleaned.replace(/【([^】]+)】/g, '<span style="font-size:1.15em;font-weight:700;">【$1】</span>');
-  let html = cleaned.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  let html = cleaned.replace(/\n/g,'<br>');
   msgs.innerHTML += '<div class="chat-msg '+cls+'"><div class="chat-avatar">'+avatarIcon+'</div><div class="chat-bubble">'+html+'</div></div>';
   msgs.scrollTop = msgs.scrollHeight;
 }

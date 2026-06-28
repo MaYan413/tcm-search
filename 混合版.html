@@ -1,947 +1,79 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>混合版 · 本草问诊 | AI诊疗 + 医案检索 + 节气养生</title>
+<title>混合版 · 本草问诊 | AI 诊疗 + 专业版检索</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+* { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-  --primary-dark: #1a5a2a;
-  --primary: #2d7a3a;
-  --primary-light: #e8f5e9;
-  --secondary: #b89a3a;
-  --secondary-light: #fef8e7;
-  --gray-bg: #f5f7f5;
-  --gray-border: #e0e8e0;
-  --text-dark: #1a2e1a;
-  --text-gray: #5a6e5a;
-  --text-light: #8aa08a;
-  --white: #ffffff;
-  --shadow: 0 4px 20px rgba(0,0,0,0.06);
-  --shadow-hover: 0 8px 30px rgba(0,0,0,0.1);
-  --radius: 16px;
-  --radius-sm: 10px;
+  --primary-dark: #1a5a2a; --primary: #2d7a3a; --primary-light: #e8f5e9;
+  --secondary: #b89a3a; --secondary-light: #fef8e7;
+  --gray-bg: #f5f7f5; --gray-border: #e0e8e0; --text-dark: #1a2e1a;
+  --text-gray: #5a6e5a; --white: #ffffff; --radius: 16px; --radius-sm: 10px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.06); --shadow-hover: 0 8px 30px rgba(0,0,0,0.1);
 }
-
 body {
-  font-family: 'Noto Sans SC', sans-serif;
-  background: var(--gray-bg);
-  color: var(--text-dark);
-  line-height: 1.5;
+  font-family: 'Noto Sans SC', sans-serif; background: var(--gray-bg);
+  color: var(--text-dark); line-height: 1.6; min-height: 100vh;
 }
 
+/* Header */
 .header {
   background: var(--primary-dark);
-  padding: 0 32px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  padding: 0 28px; height: 64px; display: flex; align-items: center;
+  justify-content: space-between; position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
 }
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-}
-
+.logo { display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; }
 .logo-icon {
-  width: 36px;
-  height: 36px;
-  background: var(--primary);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
+  width: 38px; height: 38px; background: var(--primary);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;
 }
-
-.logo-text {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: white;
-  letter-spacing: 2px;
+.logo-text { font-family: 'Noto Serif SC', serif; font-size: 20px; font-weight: 700; color: white; letter-spacing: 2px; }
+.logo-sub { font-size: 10px; color: rgba(255,255,255,0.5); }
+.badge-llm {
+  background: var(--secondary); color: white;
+  padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px;
 }
-
-.logo-sub {
-  font-size: 10px;
-  color: rgba(255,255,255,0.5);
-}
-
-.header-search {
-  flex: 1;
-  max-width: 480px;
-  position: relative;
-  margin: 0 24px;
-}
-
-.header-search input {
-  width: 100%;
-  height: 40px;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 30px;
-  padding: 0 44px 0 18px;
-  font-size: 14px;
-  color: white;
-  outline: none;
-}
-
-.header-search input::placeholder {
-  color: rgba(255,255,255,0.5);
-}
-
-.header-search input:focus {
-  background: rgba(255,255,255,0.15);
-  border-color: var(--secondary);
-}
-
-.header-search button {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 30px;
-  background: var(--primary);
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 14px;
-  color: white;
-}
-
-.search-suggestions {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: white;
-  border-radius: 12px;
-  box-shadow: var(--shadow-hover);
-  z-index: 1000;
-  max-height: 300px;
-  overflow-y: auto;
-  display: none;
-  margin-top: 4px;
-}
-
-.search-suggestions.show {
-  display: block;
-}
-
-.suggestion-item {
-  padding: 10px 16px;
-  cursor: pointer;
-  font-size: 14px;
-  color: var(--text-dark);
-  border-bottom: 1px solid var(--gray-border);
-}
-
-.suggestion-item:hover {
-  background: var(--primary-light);
-}
-
-.nav-links {
-  display: flex;
-  gap: 8px;
-}
-
+.nav-links { display: flex; gap: 8px; align-items: center; }
 .nav-link {
-  padding: 6px 16px;
-  border-radius: 20px;
-  color: rgba(255,255,255,0.7);
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s;
+  padding: 6px 16px; border-radius: 20px; color: rgba(255,255,255,0.7);
+  cursor: pointer; font-size: 14px; transition: all 0.2s; text-decoration: none;
 }
+.nav-link:hover { background: rgba(255,255,255,0.15); color: white; }
 
-.nav-link:hover, .nav-link.active {
-  background: rgba(255,255,255,0.15);
-  color: white;
-}
+/* Main */
+.main-container { max-width: 800px; margin: 0 auto; padding: 28px 20px 40px; }
 
-.main-container {
-  display: flex;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 24px 32px;
-  gap: 32px;
+/* Chat */
+.chat-card {
+  background: white; border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow); border: 1px solid var(--gray-border);
 }
-
-.sidebar {
-  width: 280px;
-  flex-shrink: 0;
-}
-
-.health-tip-card {
-  background: linear-gradient(135deg, var(--primary-light), var(--white));
-  border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--gray-border);
-}
-
-.health-tip-title {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--primary-dark);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.health-tip-content {
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--text-gray);
-}
-
-.refresh-tip {
-  background: none;
-  border: none;
-  color: var(--primary);
-  font-size: 12px;
-  cursor: pointer;
-  margin-top: 10px;
-  text-align: right;
-  width: 100%;
-}
-
-.content {
-  flex: 1;
-  min-width: 0;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.stat-card {
-  background: white;
-  border-radius: var(--radius-sm);
-  padding: 16px 20px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--gray-border);
-}
-
-.stat-icon {
-  width: 48px;
-  height: 48px;
-  background: var(--primary-light);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-}
-
-.stat-number {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--primary-dark);
-  line-height: 1.2;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: var(--text-gray);
-}
-
-.hot-search-section {
-  background: white;
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  margin-bottom: 24px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--gray-border);
-}
-
-.hot-search-title {
-  font-size: 13px;
-  color: var(--text-gray);
-  margin-bottom: 12px;
-}
-
-.hot-search-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.hot-search-item {
-  background: var(--primary-light);
-  color: var(--primary-dark);
-  padding: 8px 20px;
-  border-radius: 30px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: none;
-}
-
-.hot-search-item:hover {
-  background: var(--primary);
-  color: white;
-}
-
-/* 节气推荐卡片样式 */
-.jieqi-recommend-card {
-  border-radius: 24px;
-  overflow: hidden;
-  margin-bottom: 28px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  box-shadow: var(--shadow-hover);
-}
-.jieqi-recommend-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 30px rgba(0,0,0,0.15);
-}
-.recommend-overlay {
-  background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 100%);
-  backdrop-filter: blur(2px);
-  padding: 32px 28px;
-}
-.recommend-badge-date {
-  font-size: 14px;
-  letter-spacing: 1px;
-  margin-bottom: 14px;
-  display: inline-block;
-  background: transparent;
-  padding: 0;
-  color: rgba(255,255,255,0.92);
-  font-weight: 500;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-}
-.recommend-jieqi-name {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 44px;
-  font-weight: 800;
-  color: white;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.35);
-  margin: 12px 0 16px 0;
-  line-height: 1.2;
-  letter-spacing: 2px;
-}
-.recommend-feature-text {
-  font-size: 16px;
-  line-height: 1.6;
-  color: rgba(255,255,255,0.96);
-  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-  max-width: 85%;
-  margin-bottom: 32px;
-  font-weight: 500;
-}
-.recommend-detail-btn {
-  background: rgba(255,255,255,0.92);
-  border: none;
-  padding: 10px 28px;
-  border-radius: 60px;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--primary-dark);
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.recommend-detail-btn:hover {
-  background: white;
-  transform: scale(1.02);
-}
-
-.calendar-table {
-  background: white;
-  border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 24px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--gray-border);
-}
-
-.calendar-title {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--primary-dark);
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid var(--primary-light);
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-.calendar-title::before {
-  content: '';
-  display: none;
-}
-
-.jieqi-row {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.jieqi-cell {
-  background: var(--gray-bg);
-  border-radius: var(--radius-sm);
-  padding: 14px 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: 1px solid var(--gray-border);
-  text-align: center;
-}
-
-.jieqi-cell:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hover);
-  border-color: var(--primary);
-  background: white;
-}
-
-.jieqi-cell-name {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--primary-dark);
-  margin-bottom: 6px;
-}
-
-.jieqi-cell-date {
-  font-size: 11px;
-  color: var(--text-gray);
-}
-
-.jieqi-cell.highlight {
-  background: var(--secondary-light);
-  border: 2px solid var(--secondary);
-  box-shadow: 0 2px 8px rgba(184,154,58,0.2);
-}
-
-/* 节气详情页样式 */
-.jieqi-detail {
-  background: white;
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-}
-.jieqi-header {
+.chat-card-header {
   background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-  padding: 36px 32px;
-  color: white;
+  color: white; padding: 20px 24px;
 }
-.jieqi-detail-name {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 36px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  margin-bottom: 12px;
-}
-.jieqi-detail-time {
-  font-size: 15px;
-  opacity: 0.9;
-  margin-bottom: 20px;
-}
-.jieqi-detail-principle {
-  background: rgba(255,255,255,0.18);
-  padding: 14px 20px;
-  border-radius: 40px;
-  font-size: 15px;
-  line-height: 1.5;
-  display: inline-block;
-}
-.jieqi-detail-body {
-  padding: 32px 36px;
-}
-.jieqi-section {
-  margin-bottom: 32px;
-  border-bottom: 1px solid var(--gray-border);
-  padding-bottom: 24px;
-}
-.jieqi-section:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-.jieqi-section-title {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--primary-dark);
-  margin-bottom: 18px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  letter-spacing: 1px;
-}
-.jieqi-section-title::before {
-  content: '';
-  width: 5px;
-  height: 22px;
-  background: var(--primary);
-  border-radius: 4px;
-}
-.detail-content {
-  background: var(--gray-bg);
-  padding: 18px 22px;
-  border-radius: 18px;
-  line-height: 1.75;
-  font-size: 15px;
-  color: var(--text-dark);
-}
-.foods-tag {
-  display: inline-block;
-  background: var(--primary-light);
-  color: var(--primary-dark);
-  padding: 6px 18px;
-  border-radius: 40px;
-  font-size: 14px;
-  margin: 0 10px 12px 0;
-  transition: all 0.2s;
-}
-.recipe-box {
-  background: var(--secondary-light);
-  padding: 18px 24px;
-  border-radius: 20px;
-  line-height: 1.7;
-  font-size: 15px;
-  color: #7a6300;
-  border-left: 5px solid var(--secondary);
-}
-.warning-box {
-  background: #fef7e0;
-  border-left: 5px solid #e6a017;
-  padding: 16px 22px;
-  border-radius: 18px;
-  font-size: 14px;
-  color: #8a6e2e;
-  line-height: 1.6;
-}
-
-/* 医案/方剂详情页样式 */
-.case-detail-card, .formula-detail-card {
-  background: white;
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-}
-.case-header, .formula-header {
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-  padding: 32px 28px;
-  color: white;
-}
-.case-header .case-title, .formula-header .formula-name {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-.case-body, .formula-body {
-  padding: 32px 32px;
-}
-.case-section, .formula-section {
-  margin-bottom: 32px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--gray-border);
-}
-.case-section:last-child, .formula-section:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-.case-section-title, .formula-section-title {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--primary-dark);
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.case-section-title::before, .formula-section-title::before {
-  content: '';
-  width: 4px;
-  height: 18px;
-  background: var(--primary);
-  border-radius: 2px;
-}
-.case-text {
-  font-size: 15px;
-  line-height: 1.75;
-  color: var(--text-dark);
-  background: var(--gray-bg);
-  padding: 16px 20px;
-  border-radius: 14px;
-  margin-top: 4px;
-}
-.symptoms-text {
-  font-size: 15px;
-  line-height: 1.75;
-  color: var(--text-dark);
-  background: var(--gray-bg);
-  padding: 16px 20px;
-  border-radius: 14px;
-  margin-top: 4px;
-}
-.herb-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 8px;
-}
-.herb-item {
-  background: var(--primary-light);
-  color: var(--primary-dark);
-  padding: 8px 18px;
-  border-radius: 40px;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-.herb-item:hover {
-  background: var(--primary);
-  color: white;
-  transform: translateY(-1px);
-}
-.effect-text {
-  font-size: 15px;
-  line-height: 1.75;
-  color: var(--text-dark);
-  background: var(--gray-bg);
-  padding: 16px 20px;
-  border-radius: 14px;
-}
-
-.page { display: none; }
-.page.active { display: block; }
-.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--primary-dark); color: white; padding: 10px 24px; border-radius: 30px; font-size: 14px; z-index: 2000; animation: fadeOut 2s ease forwards; }
-@keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
-
-/* 我的页面 - 恢复原来的简洁卡片式布局 */
-.profile-card {
-  background: white;
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--gray-border);
-}
-.profile-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--gray-border);
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.profile-item:last-child {
-  border-bottom: none;
-}
-.profile-item:hover {
-  background: var(--gray-bg);
-}
-.profile-icon {
-  width: 48px;
-  height: 48px;
-  background: var(--primary-light);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-}
-.profile-info {
-  flex: 1;
-}
-.profile-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-dark);
-  margin-bottom: 4px;
-}
-.profile-desc {
-  font-size: 12px;
-  color: var(--text-gray);
-}
-.profile-arrow {
-  font-size: 20px;
-  color: var(--text-light);
-}
-
-/* 列表页面样式（收藏、历史） */
-.list-page {
-  background: white;
-  border-radius: var(--radius);
-  padding: 0;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--gray-border);
-  overflow: hidden;
-}
-.list-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--gray-border);
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.list-item:last-child {
-  border-bottom: none;
-}
-.list-item:hover {
-  background: var(--gray-bg);
-}
-.list-item-content {
-  flex: 1;
-}
-.list-item-title {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text-dark);
-  margin-bottom: 4px;
-}
-.list-item-time {
-  font-size: 11px;
-  color: var(--text-light);
-}
-.list-item-delete {
-  color: var(--text-light);
-  font-size: 14px;
-  cursor: pointer;
-  padding: 4px 8px;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.list-item:hover .list-item-delete {
-  opacity: 1;
-}
-.list-item-delete:hover {
-  color: #f44336;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-gray);
-}
-
-.feedback-form {
-  background: white;
-  border-radius: var(--radius);
-  padding: 28px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--gray-border);
-}
-.feedback-textarea {
-  width: 100%;
-  min-height: 150px;
-  padding: 14px;
-  font-size: 14px;
-  border: 1px solid var(--gray-border);
-  border-radius: 12px;
-  resize: vertical;
-  font-family: inherit;
-  outline: none;
-}
-.feedback-textarea:focus {
-  border-color: var(--primary);
-}
-.feedback-submit {
-  margin-top: 18px;
-  padding: 10px 28px;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 40px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.2s;
-}
-.feedback-submit:hover {
-  background: var(--primary-dark);
-}
-
-.result-card { background: white; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 12px; border-left: 3px solid var(--primary); cursor: pointer; transition: all 0.2s; }
-.result-card:hover { transform: translateX(4px); box-shadow: var(--shadow-hover); }
-.back-button, .export-btn { background: var(--gray-bg); border: 1px solid var(--gray-border); padding: 8px 20px; border-radius: 30px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
-.back-button:hover { background: var(--gray-border); }
-.export-btn { background: var(--primary); color: white; border: none; }
-.export-btn:hover { background: var(--primary-dark); }
-
-.results-header {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.footer {
-  text-align: center;
-  padding: 24px 20px;
-  font-size: 12px;
-  color: var(--text-light);
-  border-top: 1px solid var(--gray-border);
-  margin-top: 32px;
-}
-
-@media (max-width: 900px) { .sidebar { display: none; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .jieqi-row { grid-template-columns: repeat(3, 1fr); } .recommend-feature-text { max-width: 100%; } .recommend-jieqi-name { font-size: 32px; } .jieqi-detail-body { padding: 20px; } .jieqi-header { padding: 24px 20px; } .case-body, .formula-body { padding: 24px 20px; } }
-
-/* ======================== AI多轮问诊样式 ======================== */
-.consult-container { max-width: 800px; margin: 0 auto; }
-
-/* 步骤指示器 */
-.step-indicator { display: flex; align-items: center; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; gap: 0; }
-.step-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--gray-border); color: var(--text-gray); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; transition: all 0.3s; position: relative; z-index: 1; }
-.step-dot.active { background: var(--primary); color: white; box-shadow: 0 0 0 6px rgba(45,122,58,0.15); }
-.step-dot.done { background: var(--primary-dark); color: white; }
-.step-line { flex: 0 0 36px; height: 2px; background: var(--gray-border); margin: 0; transition: background 0.3s; }
-.step-line.done { background: var(--primary); }
-.step-label { font-size: 11px; color: var(--text-gray); text-align: center; margin-top: 6px; }
-.step-item { display: flex; flex-direction: column; align-items: center; }
-
-/* 问诊卡片 */
-.consult-card { background: white; border-radius: var(--radius); padding: 28px 30px; box-shadow: var(--shadow); border: 1px solid var(--gray-border); margin-bottom: 20px; }
-.consult-card-title { font-family: 'Noto Serif SC', serif; font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; letter-spacing: 0.4px; }
-.consult-card-subtitle { font-size: 14px; color: var(--text-gray); margin-bottom: 20px; letter-spacing: 0.3px; }
-
-/* 表单样式 */
-.consult-form { display: flex; flex-direction: column; gap: 16px; }
-.form-row { display: flex; gap: 16px; flex-wrap: wrap; }
-.form-group { flex: 1; min-width: 140px; }
-.form-group label { display: block; font-size: 14px; font-weight: 600; color: var(--text-dark); margin-bottom: 6px; letter-spacing: 0.3px; }
-.form-group label .required { color: #e74c3c; margin-left: 2px; }
-.form-group input, .form-group select, .form-group textarea {
-  width: 100%; padding: 11px 15px; border: 1px solid var(--gray-border); border-radius: var(--radius-sm);
-  font-size: 15px; font-family: inherit; color: var(--text-dark); background: var(--gray-bg);
-  transition: border-color 0.2s; outline: none; letter-spacing: 0.3px;
-}
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); background: white; }
-.form-group textarea { min-height: 100px; resize: vertical; }
-
-.btn-primary {
-  background: var(--primary); color: white; border: none; padding: 12px 32px; border-radius: 30px;
-  font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex;
-  align-items: center; gap: 8px; justify-content: center; font-family: inherit;
-}
-.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-hover); }
-.btn-primary:disabled { background: var(--gray-border); cursor: not-allowed; transform: none; box-shadow: none; }
-.btn-secondary {
-  background: var(--gray-bg); color: var(--text-dark); border: 1px solid var(--gray-border);
-  padding: 10px 24px; border-radius: 30px; font-size: 14px; cursor: pointer; transition: all 0.2s; font-family: inherit;
-}
-.btn-secondary:hover { background: var(--gray-border); }
-
-/* 追问问题卡片 */
-.question-card { background: var(--primary-light); border-radius: var(--radius); padding: 24px; border: 1px solid rgba(45,122,58,0.2); margin-bottom: 20px; }
-.question-text { font-size: 16px; font-weight: 600; color: var(--primary-dark); margin-bottom: 16px; }
-.question-type-badge { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 20px; background: var(--primary); color: white; margin-left: 8px; }
-
-/* 选项按钮 */
-.options-grid { display: flex; flex-wrap: wrap; gap: 10px; }
-.option-btn {
-  padding: 10px 20px; border: 2px solid var(--gray-border); border-radius: 30px; background: white;
-  font-size: 14px; cursor: pointer; transition: all 0.2s; font-family: inherit; color: var(--text-dark);
-  user-select: none;
-}
-.option-btn:hover { border-color: var(--primary); background: var(--primary-light); }
-.option-btn.selected { border-color: var(--primary); background: var(--primary); color: white; font-weight: 600; }
-
-/* 匹配计数 */
-.match-count { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 20px; font-size: 13px; margin-bottom: 16px; }
-.match-count.many { background: #fff3cd; color: #856404; }
-.match-count.few { background: var(--primary-light); color: var(--primary-dark); }
-
-/* 诊断结果 */
-.diagnosis-result { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--gray-border); }
-.diag-section { padding: 20px 24px; border-bottom: 1px solid var(--gray-border); }
-.diag-section:last-child { border-bottom: none; }
-.diag-section-title { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-.diag-section-content { font-size: 14px; line-height: 1.8; color: var(--text-dark); white-space: pre-wrap; }
-.diag-highlight { background: var(--secondary-light); padding: 16px 20px; border-radius: var(--radius-sm); border-left: 4px solid var(--secondary); }
-
-/* 术语解释 */
-.term-explain-area { margin-top: 24px; }
-.term-explain-input { display: flex; gap: 10px; }
-.term-explain-input input { flex: 1; }
-.term-explain-result { margin-top: 16px; padding: 16px 20px; background: var(--secondary-light); border-radius: var(--radius-sm); font-size: 14px; line-height: 1.8; display: none; }
-.term-explain-result.show { display: block; }
-
-/* 加载动画 */
-.loading-spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-dots { display: flex; gap: 6px; align-items: center; justify-content: center; padding: 20px; }
-.loading-dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: dotBounce 1.4s ease-in-out infinite; }
-.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes dotBounce { 0%,80%,100% { transform: scale(0); opacity: 0.3; } 40% { transform: scale(1); opacity: 1; } }
-
-/* 复诊按钮 */
-.restart-btn { margin-top: 20px; text-align: center; }
-.warning-box { background: #fff8e1; border: 1px solid #ffe082; border-radius: var(--radius-sm); padding: 12px 16px; font-size: 13px; color: #8d6e00; margin-top: 16px; }
-
-/* Toast 消息 */
-.toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: var(--text-dark); color: white; padding: 10px 24px; border-radius: 30px; font-size: 14px; z-index: 9999; animation: fadeInOut 2s ease; }
-@keyframes fadeInOut { 0% { opacity: 0; transform: translateX(-50%) translateY(-10px); } 20% { opacity: 1; transform: translateX(-50%) translateY(0); } 80% { opacity: 1; } 100% { opacity: 0; } }
-
-@media (max-width: 600px) { .consult-card { padding: 20px; } .form-row { flex-direction: column; } .options-grid { flex-direction: column; } .option-btn { text-align: center; } }
-
-/* ======================== AI聊天诊疗样式 ======================== */
-.chat-container { max-width: 780px; margin: 0 auto; }
-.chat-header-area {
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-  color: white; padding: 26px 30px; border-radius: var(--radius) var(--radius) 0 0;
-  margin-bottom: 0;
-}
-.chat-header-area h2 { font-family: 'Noto Serif SC', serif; font-size: 22px; margin: 0 0 6px 0; display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px; }
-.chat-header-area p { font-size: 14px; opacity: 0.9; margin: 0; letter-spacing: 0.3px; line-height: 1.6; }
-
+.chat-card-header h2 { font-family: 'Noto Serif SC', serif; font-size: 19px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.chat-card-header p { font-size: 13px; opacity: 0.85; margin: 0; }
 .quick-examples {
-  background: white; padding: 16px 22px; border-bottom: 1px solid var(--gray-border);
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: #fafafa; padding: 14px 20px; border-bottom: 1px solid var(--gray-border);
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
 }
-.quick-examples span { font-size: 14px; color: var(--text-gray); white-space: nowrap; }
+.quick-examples span { font-size: 13px; color: var(--text-gray); white-space: nowrap; }
 .quick-btn {
-  background: var(--primary-light); color: var(--primary-dark); border: 1px solid rgba(45,122,58,0.2);
-  padding: 8px 18px; border-radius: 22px; font-size: 14px; cursor: pointer;
-  transition: all 0.2s; font-family: inherit; white-space: nowrap; letter-spacing: 0.3px;
+  background: var(--primary-light); color: var(--primary-dark);
+  border: 1px solid var(--primary); padding: 7px 18px; border-radius: 20px;
+  font-size: 13px; cursor: pointer; transition: all 0.2s;
+  font-family: inherit; white-space: nowrap; letter-spacing: 0.3px;
 }
 .quick-btn:hover { background: var(--primary); color: white; }
 
 .chat-messages {
-  background: #f8faf8; min-height: 380px; max-height: 480px; overflow-y: auto;
+  background: #f9faf9; min-height: 380px; max-height: 480px; overflow-y: auto;
   padding: 22px; display: flex; flex-direction: column; gap: 18px;
 }
 .chat-msg { display: flex; gap: 12px; animation: msgSlideIn 0.35s ease; }
@@ -964,25 +96,12 @@ body {
 }
 .chat-msg.user .chat-bubble {
   background: var(--primary); color: white;
-  border-top-right-radius: 4px; box-shadow: 0 2px 6px rgba(45,122,58,0.2);
+  border-top-right-radius: 4px; box-shadow: 0 2px 8px rgba(45,122,58,0.25);
 }
-.chat-bubble p { margin: 0 0 8px 0; }
-.chat-bubble p:last-child { margin-bottom: 0; }
-.chat-bubble ul, .chat-bubble ol { margin: 8px 0; padding-left: 20px; }
-.chat-bubble li { margin-bottom: 6px; }
-.chat-bubble strong { color: var(--primary-dark); }
-.chat-msg.user .chat-bubble strong { color: #fff; }
-.chat-bubble .danger-tag {
-  display: inline-block; background: #fff0f0; color: #c0392b; padding: 3px 12px;
-  border-radius: 4px; font-weight: 600; font-size: 13px; margin-right: 6px;
-}
-.chat-bubble .safe-tag {
-  display: inline-block; background: var(--primary-light); color: var(--primary-dark);
-  padding: 3px 12px; border-radius: 4px; font-weight: 600; font-size: 13px; margin-right: 6px;
-}
+
 .typing-indicator { display: flex; align-items: center; gap: 6px; padding: 10px 16px; }
 .typing-indicator span {
-  width: 8px; height: 8px; border-radius: 50%; background: var(--text-gray);
+  width: 8px; height: 8px; border-radius: 50%; background: #bbb;
   animation: typeBounce 1.4s ease-in-out infinite;
 }
 .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
@@ -992,439 +111,210 @@ body {
 .chat-input-area {
   background: white; padding: 18px 22px; border-top: 1px solid var(--gray-border);
   display: flex; gap: 12px; align-items: center;
-  border-radius: 0 0 var(--radius) var(--radius);
 }
 .chat-input-area input {
   flex: 1; padding: 12px 18px; border: 1px solid var(--gray-border); border-radius: 24px;
-  font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; letter-spacing: 0.3px;
+  font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s;
 }
 .chat-input-area input:focus { border-color: var(--primary); }
 .chat-send-btn {
-  width: 44px; height: 44px; border-radius: 50%; background: var(--primary); border: none;
-  color: white; font-size: 18px; cursor: pointer; transition: all 0.2s; flex-shrink: 0;
+  width: 46px; height: 46px; border-radius: 50%; background: var(--primary); border: none;
+  color: white; font-size: 20px; cursor: pointer; transition: all 0.2s; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
 }
-.chat-send-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
-.chat-send-btn:disabled { background: var(--gray-border); cursor: not-allowed; transform: none; }
+.chat-send-btn:hover { opacity: 0.9; transform: scale(1.05); }
+.chat-send-btn:disabled { background: #ccc; cursor: not-allowed; transform: none; }
 .chat-clear-btn {
   background: none; border: 1px solid var(--gray-border); color: var(--text-gray);
   padding: 8px 20px; border-radius: 22px; font-size: 13px; cursor: pointer;
-  transition: all 0.2s; font-family: inherit; margin-top: 12px; letter-spacing: 0.3px;
+  transition: all 0.2s; font-family: inherit; margin: 8px 0 16px; letter-spacing: 0.3px;
 }
 .chat-clear-btn:hover { background: #fee; border-color: #e88; color: #c0392b; }
 
+/* Info card */
+.info-card {
+  background: linear-gradient(135deg, var(--primary-light), white);
+  border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px;
+  border: 1px solid var(--primary);
+}
+.info-card h3 { font-size: 15px; color: var(--primary-dark); margin-bottom: 8px; }
+.info-card ul { font-size: 13px; color: var(--text-gray); padding-left: 18px; line-height: 1.8; }
+
+/* Version switch */
+.version-footer {
+  text-align: center; padding: 20px; font-size: 13px; color: var(--text-gray);
+}
+.version-footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+.version-footer a:hover { text-decoration: underline; }
+
 @media (max-width: 600px) {
+  .main-container { padding: 16px 12px 30px; }
   .chat-messages { min-height: 280px; max-height: 360px; padding: 14px; }
-  .chat-bubble { max-width: 90%; font-size: 13px; }
+  .chat-bubble { max-width: 90%; font-size: 14px; }
 }
 </style>
 </head>
 <body>
 
 <header class="header">
-  <div class="logo" onclick="showPage('home')">
+  <a class="logo" href="/">
     <div class="logo-icon">🌿</div>
-    <div><div class="logo-text">本草问诊</div><div class="logo-sub">中医药辅助诊疗系统</div></div>
-  </div>
-  <div class="header-search">
-    <input type="text" id="headerSearchInput" placeholder="输入方剂名或症状，如：归脾汤、失眠..." 
-           onkeydown="if(event.key==='Enter') doSearch(this.value)"
-           oninput="onSearchInput(this.value)">
-    <button onclick="doSearch(document.getElementById('headerSearchInput').value)">🔍</button>
-    <div class="search-suggestions" id="searchSuggestions"></div>
-  </div>
-  <div class="nav-links">
-    <span class="nav-link active" onclick="showPage('home')">首页</span>
-    <span class="nav-link" onclick="showPage('home');setTimeout(()=>document.getElementById('chatInput').scrollIntoView({behavior:'smooth',block:'center'}),100)">💬 AI诊疗</span>
-    <a class="nav-link" href="/">📋 专业版</a>
-    <a class="nav-link" href="/llm">🧬 LLM版</a>
-    <span class="nav-link" onclick="showPage('profile')">我的</span>
+    <div><div class="logo-text">本草问诊AI</div><div class="logo-sub">AI 大模型深度诊疗</div></div>
+  </a>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="nav-links">
+      <a class="nav-link" href="/" style="background:rgba(255,255,255,0.15);color:white;">📋 专业版</a>
+    </div>
   </div>
 </header>
 
 <div class="main-container">
-  <aside class="sidebar"><div class="health-tip-card"><div class="health-tip-title">💡 养生小知识</div><div class="health-tip-content" id="healthTipContent"></div><button class="refresh-tip" onclick="refreshHealthTip()">换一换</button></div></aside>
-  <div class="content">
-    <div class="page active" id="pageHome">
-      <div class="stats-grid"><div class="stat-card"><div class="stat-icon">📋</div><div><div class="stat-number" id="heroStatCount">-</div><div class="stat-label">医案数据</div></div></div><div class="stat-card"><div class="stat-icon">🌿</div><div><div class="stat-number" id="heroFormulaCount">-</div><div class="stat-label">方剂收录</div></div></div><div class="stat-card"><div class="stat-icon">🔍</div><div><div class="stat-number">智能</div><div class="stat-label">症状检索</div></div></div><div class="stat-card"><div class="stat-icon">💊</div><div><div class="stat-number">推荐</div><div class="stat-label">方剂建议</div></div></div></div>
-      <div class="hot-search-section"><div class="hot-search-title">热门搜索</div><div class="hot-search-grid" id="hotSearchGrid"></div></div>
-      <div id="smartJieqiRecommend"></div>
-      <div class="calendar-table"><div class="calendar-title">二十四节气养生大全</div><div id="jieqiCalendar"></div></div>
 
-      <!-- AI智能诊疗（内嵌首页） -->
-      <div class="chat-container" style="margin-top:24px;">
-        <!-- 基础信息采集 -->
-        <div class="consult-card" id="chatInfoCard" style="margin-bottom:16px;">
-          <div class="consult-card-title" style="font-size:18px;">📋 基本信息（选填，帮助AI更精准分析）</div>
-          <div class="consult-form" style="gap:12px;">
-            <div class="form-row" style="gap:12px;">
-              <div class="form-group" style="min-width:100px;"><label style="font-size:14px;">姓名</label><input type="text" id="chatName" placeholder="选填" style="font-size:15px;padding:11px 15px;"></div>
-              <div class="form-group" style="min-width:100px;"><label style="font-size:14px;">性别</label><select id="chatGender" style="font-size:15px;padding:11px 15px;"><option value="">请选择</option><option value="男">男</option><option value="女">女</option></select></div>
-              <div class="form-group" style="min-width:90px;"><label style="font-size:14px;">年龄</label><input type="number" id="chatAge" placeholder="岁" min="1" max="120" style="font-size:15px;padding:11px 15px;"></div>
-              <div class="form-group" style="min-width:90px;"><label style="font-size:14px;">身高 cm</label><input type="number" id="chatHeight" placeholder="选填" min="50" max="250" style="font-size:15px;padding:11px 15px;"></div>
-              <div class="form-group" style="min-width:90px;"><label style="font-size:14px;">体重 kg</label><input type="number" id="chatWeight" placeholder="选填" min="20" max="300" style="font-size:15px;padding:11px 15px;"></div>
-            </div>
-            <div style="font-size:13px;color:var(--text-gray);margin-top:4px;">💡 填写基本信息后，AI将结合您的年龄、性别等进行更精准的分析</div>
-          </div>
-        </div>
-
-        <div class="chat-header-area" style="border-radius:var(--radius) var(--radius) 0 0;">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-            <div>
-              <h2 style="margin-bottom:4px;font-size:20px;">💬 AI 智能诊疗</h2>
-              <p style="margin:0;font-size:14px;line-height:1.6;">无需 API Key，直接输入症状即可获得中医辨证分析与建议</p>
-            </div>
-            <button onclick="changeApiKey()" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 16px;border-radius:20px;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;">⚙️ 升级 LLM</button>
-          </div>
-        </div>
-        <div class="quick-examples" style="padding:16px 20px;">
-          <span style="font-size:14px;">⚡ 快速体验：</span>
-          <button class="quick-btn" onclick="sendQuickExample('头痛')" style="font-size:14px;padding:8px 18px;">头痛</button>
-          <button class="quick-btn" onclick="sendQuickExample('关节疼痛')" style="font-size:14px;padding:8px 18px;">关节疼痛</button>
-          <button class="quick-btn" onclick="sendQuickExample('失眠')" style="font-size:14px;padding:8px 18px;">失眠</button>
-          <button class="quick-btn" onclick="sendQuickExample('胃痛')" style="font-size:14px;padding:8px 18px;">胃痛</button>
-        </div>
-        <div class="chat-messages" id="chatMessages" style="min-height:360px;max-height:440px;padding:20px;gap:16px;font-size:15px;line-height:1.8;">
-          <div class="chat-msg ai">
-            <div class="chat-avatar">🌿</div>
-            <div class="chat-bubble" style="font-size:15px;line-height:1.8;">
-              <p>您好，我是<b>本草 AI 诊疗助手</b>。👋</p>
-              <p>请告诉我您的<b>主要症状</b>，我会：</p>
-              <p>🔴 先帮您<b>排查危险信号</b><br>🟢 进行<b>症状分型</b>分析<br>💡 给出<b>具体应对方案</b><br>⚠️ 提供<b>用药安全提示</b></p>
-              <p style="margin-top:10px;color:var(--text-gray);font-size:13px;">您可以点击上方快捷按钮，或直接在下方输入症状描述。</p>
-            </div>
-          </div>
-        </div>
-        <div class="chat-input-area" style="padding:16px 20px;gap:12px;">
-          <input type="text" id="chatInput" placeholder="描述您的症状，如：头痛三天、太阳穴附近搏动性痛……" onkeydown="if(event.key==='Enter')sendChatMessage()" style="font-size:15px;padding:12px 18px;">
-          <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()" style="width:46px;height:46px;font-size:20px;">➤</button>
-        </div>
-        <div style="text-align:center;padding-bottom:12px;">
-          <button class="chat-clear-btn" onclick="clearChat()" style="font-size:13px;padding:8px 20px;">🗑 清空对话</button>
-        </div>
-      </div>
-    </div>
-    <div class="page" id="pageResults"><div class="results-header"><div><div style="font-size: 20px; font-weight: 700;" id="resultsQuery">搜索结果</div><div class="results-count" id="resultsCount">共 0 条结果</div></div><div><button class="back-button" onclick="goBackFromResults()">返回首页</button></div></div><div id="resultsList"></div></div>
-    <div class="page" id="pageDetail"><div class="results-header"><div></div><div><button class="export-btn" onclick="exportCurrent()">导出</button><button class="back-button" onclick="goBackFromDetail()">返回</button></div></div><div id="detailContainer"></div></div>
-    <div class="page" id="pageJieqiDetail"><div class="results-header"><div></div><button class="back-button" onclick="backToHome()">返回首页</button></div><div id="jieqiDetailContainer"></div></div>
-
-    <!-- 我的页面 -->
-    <div class="page" id="pageProfile">
-      <div class="profile-card">
-        <div class="profile-item" onclick="showFavorites()">
-          <div class="profile-icon">❤️</div>
-          <div class="profile-info">
-            <div class="profile-title">收藏</div>
-            <div class="profile-desc">收藏的方剂和医案</div>
-          </div>
-          <div class="profile-arrow">›</div>
-        </div>
-        <div class="profile-item" onclick="showHistory()">
-          <div class="profile-icon">🕐</div>
-          <div class="profile-info">
-            <div class="profile-title">历史</div>
-            <div class="profile-desc">最近的搜索记录</div>
-          </div>
-          <div class="profile-arrow">›</div>
-        </div>
-        <div class="profile-item" onclick="showFeedback()">
-          <div class="profile-icon">📝</div>
-          <div class="profile-info">
-            <div class="profile-title">意见反馈</div>
-            <div class="profile-desc">告诉我们你的建议</div>
-          </div>
-          <div class="profile-arrow">›</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="page" id="pageFavorites"><div class="results-header"><div><div style="font-size:20px; font-weight:700;">我的收藏</div><div class="results-count" id="favoritesCount">共 0 条收藏</div></div><button class="back-button" onclick="goBackToProfile()">← 返回</button></div><div id="favoritesList" class="list-page"></div></div>
-    <div class="page" id="pageHistory"><div class="results-header"><div><div style="font-size:20px; font-weight:700;">搜索历史</div><div class="results-count" id="historyCount">共 0 条记录</div></div><div><button class="back-button" onclick="clearHistory()">清空历史</button><button class="back-button" onclick="goBackToProfile()">← 返回</button></div></div><div id="historyList" class="list-page"></div></div>
-    <div class="page" id="pageFeedback"><div class="results-header"><div><div style="font-size:20px; font-weight:700;">意见反馈</div><div class="results-count">我们非常重视你的意见</div></div><button class="back-button" onclick="goBackToProfile()">← 返回</button></div><div class="feedback-form"><textarea id="feedbackContent" class="feedback-textarea" placeholder="请告诉我们你的建议、意见或遇到的问题..."></textarea><button class="feedback-submit" onclick="submitFeedback()">提交反馈</button></div></div>
+  <!-- LLM 能力说明 -->
+  <div class="info-card">
+    <h3>🧠 DeepSeek 大模型 vs 专业版</h3>
+    <ul>
+      <li>更精准的辨证分型（28种复合证型全覆盖）</li>
+      <li>个性化方剂推荐（结合年龄、体质、症状综合分析）</li>
+      <li>深入的病因病机解释（通俗易懂的中医理论）</li>
+      <li>智能追问，逐步缩小诊断范围</li>
+      <li>每次回复都是"千人千面"，非模板化</li>
+    </ul>
   </div>
+
+  <!-- 聊天区域 -->
+  <div class="chat-card">
+    <div class="chat-card-header">
+      <h2>💬 大模型智能诊疗</h2>
+      <p>DeepSeek 驱动 · 中医辨证 · 千人千面 · 服务端 Key 已启用</p>
+    </div>
+    <div class="quick-examples">
+      <span>⚡ 快速体验：</span>
+      <button class="quick-btn" onclick="sendQuick('头痛三天，太阳穴搏动性疼痛，怕光，有点恶心')">偏头痛</button>
+      <button class="quick-btn" onclick="sendQuick('关节疼痛，遇冷加重，得温缓解，膝盖为主')">关节痛</button>
+      <button class="quick-btn" onclick="sendQuick('失眠一个月，入睡困难，心烦多梦，口干')">失眠</button>
+      <button class="quick-btn" onclick="sendQuick('胃痛饭后加重，胀满嗳气，大便不成形')">胃痛</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-msg ai">
+        <div class="chat-avatar">🌿</div>
+        <div class="chat-bubble" style="font-size:15px;line-height:1.8;">
+          您好，我是<b>本草问诊AI · 大模型版</b>，由 DeepSeek 驱动。🌿<br><br>
+          与专业版不同，我将为您提供：<br>
+          🔮 <b>深度辨证分析</b>（结合您的具体体质）<br>
+          📜 <b>个性化方药推荐</b>（参考 31 万例医案）<br>
+          💡 <b>病因病机解读</b>（通俗易懂）<br>
+          ❓ <b>智能追问</b>（逐步缩小诊断范围）<br><br>
+          🟢 <b>服务端已配置 API Key</b>，直接描述症状即可开始。<br>          点击右上角 <b>📋 专业版</b> 可切换至31万医案检索。
+        </div>
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <input type="text" id="chatInput" placeholder="描述您的症状，如：头痛三天，太阳穴搏动性疼痛，伴有恶心畏光……" onkeydown="if(event.key==='Enter')sendMessage()">
+      <button class="chat-send-btn" id="chatSendBtn" onclick="sendMessage()">➤</button>
+    </div>
+    <div style="text-align:center;">
+      <button class="chat-clear-btn" onclick="clearChat()">🗑 清空对话</button>
+    </div>
+  </div>
+
+  <div class="version-footer">
+    🔀 混合版 · <a href="/">📋 专业版</a> · DeepSeek 驱动
+  </div>
+
 </div>
-<div style="text-align:center;padding:16px;background:var(--primary-light);border-radius:12px;margin-top:24px;font-size:13px;color:var(--text-gray);">
-  当前为 <b style="color:var(--primary-dark);">混合版</b> · 同时提供
-  <a href="/" style="color:var(--primary);font-weight:600;">📋 专业版</a> ·
-  <a href="/llm" style="color:var(--accent);font-weight:600;">🧬 LLM版</a>
-</div>
-<footer class="footer">本草问诊 · 基于真实医案数据 · 内容仅供参考，不替代正规医疗诊断</footer>
 
 <script>
-// ======================== 二十四节气数据 ====================
-const JIEQI_BG_IMAGES = {
-  "立春": "images/lichun.jpg", "雨水": "images/yushui.jpg", "惊蛰": "images/jingzhe.jpg", "春分": "images/chunfen.jpg",
-  "清明": "images/qingming.jpg", "谷雨": "images/guyu.jpg", "立夏": "images/lixia.jpg", "小满": "images/xiaoman.jpg",
-  "芒种": "images/mangzhong.jpg", "夏至": "images/xiazhi.jpg", "小暑": "images/xiaoshu.jpg", "大暑": "images/dashu.jpg",
-  "立秋": "images/liqiu.jpg", "处暑": "images/chushu.jpg", "白露": "images/bailu.jpg", "秋分": "images/qiufen.jpg",
-  "寒露": "images/hanlu.jpg", "霜降": "images/shuangjiang.jpg", "立冬": "images/lidong.jpg", "小雪": "images/xiaoxue.jpg",
-  "大雪": "images/daxue.jpg", "冬至": "images/dongzhi.jpg", "小寒": "images/xiaohan.jpg", "大寒": "images/dahan.jpg"
-};
-const JIEQI_BRIEF = { "立春":"立春阳气生，护肝升阳，韭菜豆芽助生发。","雨水":"雨水乍暖还寒，宜春捂防寒，多吃山药薏米。","惊蛰":"惊蛰春雷动，肝阳升发，吃梨润燥养正气。","春分":"春分阴阳平，调和肝脾，食甘少酸踏青怡情。","清明":"清明柔肝养肺，荠菜香椿正当时，避发物防过敏。","谷雨":"谷雨湿气渐重，健脾祛湿、疏肝清热。","立夏":"立夏养心护阳，午间小憩，食莲子百合。","小满":"小满健脾祛湿宜冬瓜薏米，忌贪凉饮冷。","芒种":"芒种清热解暑，绿豆荷叶消暑，午休养心。","夏至":"夏至养心宁神，冬病夏治，吃苦瓜莲子。","小暑":"小暑清热祛湿，冬瓜薏米汤，心静自然凉。","大暑":"大暑祛湿健脾，三豆汤度苦夏。","立秋":"立秋滋阴润肺，银耳雪梨润燥，少辛增酸。","处暑":"处暑润燥安神，莲藕蜂蜜润肺，解秋乏。","白露":"白露滋阴润肺，多吃梨芝麻，腹部保暖。","秋分":"秋分润肺平衡阴阳，百合银耳润燥登高。","寒露":"寒露养阴防燥，芝麻核桃润肺，足部保暖。","霜降":"霜降健脾养胃，山药栗子温补，忌生冷。","立冬":"立冬补肾藏精，羊肉核桃温阳，早卧晚起。","小雪":"小雪温补肾阳，黑豆红枣助阳，多晒太阳。","大雪":"大雪温阳固本，桂圆红枣茶暖身。","冬至":"冬至温补脾肾，饺子羊肉汤，静养潜藏。","小寒":"小寒温阳散寒，生姜羊肉暖中。","大寒":"大寒温补脾肾，糯米八宝饭补益。" };
-const JIEQI_DETAIL_MAP = {
-  "立春": { principle:"护肝养阳，升发阳气", foods:["韭菜","豆芽","春笋","红枣"], recipe:"韭菜炒鸡蛋", warning:"忌食酸收之味", healthTips:"夜卧早起，广步于庭", details:"立春标志着春季开始，阳气初生。" },
-  "雨水": { principle:"健脾祛湿，调养脾胃", foods:["山药","薏米","小米","南瓜"], recipe:"山药薏米粥", warning:"注意保暖，防倒春寒", healthTips:"春捂防寒", details:"雨水时节湿气渐重，易伤脾胃。" },
-  "惊蛰": { principle:"疏肝健脾，升阳润燥", foods:["梨","山药","春笋","韭菜"], recipe:"雪梨银耳羹", warning:"忌生冷油腻", healthTips:"适当运动", details:"惊蛰万物复苏，肝气旺盛。" },
-  "春分": { principle:"调和阴阳，平衡肝脾", foods:["豆芽","莴笋","草莓","蜂蜜"], recipe:"蜂蜜柠檬水", warning:"饮食宜清淡", healthTips:"早睡早起", details:"春分昼夜平分。" },
-  "清明": { principle:"柔肝养肺，清热祛湿", foods:["荠菜","香椿","山药","百合"], recipe:"荠菜豆腐汤", warning:"忌发物，防过敏", healthTips:"踏青散步", details:"清明气候多变。" },
-  "谷雨": { principle:"健脾祛湿，疏肝养脾", foods:["赤小豆","茯苓","山药","薏米"], recipe:"赤小豆汤", warning:"忌生冷冰饮", healthTips:"适当运动", details:"谷雨是春季最后一个节气。" },
-  "立夏": { principle:"养心护阳，清心降火", foods:["莲子","百合","苦瓜","绿豆"], recipe:"莲子百合粥", warning:"忌贪凉饮冷", healthTips:"午间小憩", details:"立夏标志着夏季开始。" },
-  "小满": { principle:"清热利湿，健脾和胃", foods:["冬瓜","绿豆","黄瓜","薏米"], recipe:"绿豆冬瓜汤", warning:"防湿热", healthTips:"及时补水", details:"小满气温升高，湿气渐重。" },
-  "芒种": { principle:"清热解暑，健脾祛湿", foods:["绿豆","西瓜","苦瓜","荷叶"], recipe:"绿豆汤", warning:"忌油腻", healthTips:"避免中暑", details:"芒种天气炎热。" },
-  "夏至": { principle:"养心安神，清热解暑", foods:["莲子","百合","苦瓜","绿豆"], recipe:"百合糖水", warning:"忌暴饮暴食", healthTips:"冬病夏治", details:"夏至阳气最盛。" },
-  "小暑": { principle:"清热解暑，养心安神", foods:["绿豆","冬瓜","西瓜","莲子"], recipe:"冬瓜汤", warning:"防中暑", healthTips:"保持平静", details:"小暑天气炎热。" },
-  "大暑": { principle:"清热祛湿，健脾和胃", foods:["薏米","赤小豆","绿豆","冬瓜"], recipe:"三豆汤", warning:"忌贪凉", healthTips:"避免暴晒", details:"大暑最热时节。" },
-  "立秋": { principle:"滋阴润肺，收敛阳气", foods:["梨","百合","银耳","山药"], recipe:"银耳羹", warning:"忌辛辣", healthTips:"早睡早起", details:"立秋标志着秋季开始。" },
-  "处暑": { principle:"润燥养肺，清热安神", foods:["梨","莲藕","百合","蜂蜜"], recipe:"莲藕汤", warning:"防秋乏", healthTips:"增加睡眠", details:"处暑暑气渐消。" },
-  "白露": { principle:"滋阴润燥，养肺生津", foods:["梨","银耳","百合","芝麻"], recipe:"雪梨汤", warning:"忌生冷", healthTips:"注意保暖", details:"白露昼夜温差大。" },
-  "秋分": { principle:"滋阴润肺，平衡阴阳", foods:["百合","银耳","山药","梨"], recipe:"百合羹", warning:"忌辛辣", healthTips:"心情平和", details:"秋分昼夜平分。" },
-  "寒露": { principle:"滋阴润燥，养护肺气", foods:["芝麻","核桃","银耳","梨"], recipe:"芝麻糊", warning:"防秋燥", healthTips:"足部保暖", details:"寒露天气转凉。" },
-  "霜降": { principle:"健脾养胃，温补润燥", foods:["山药","红薯","栗子","南瓜"], recipe:"栗子粥", warning:"忌生冷", healthTips:"霜降进补", details:"霜降秋季最后一个节气。" },
-  "立冬": { principle:"补肾藏精，温补阳气", foods:["羊肉","核桃","黑芝麻","枸杞"], recipe:"羊肉汤", warning:"忌过食辛辣", healthTips:"早睡晚起", details:"立冬标志着冬季开始。" },
-  "小雪": { principle:"温补肾阳，养藏精气", foods:["黑豆","核桃","羊肉","萝卜"], recipe:"萝卜炖羊肉", warning:"忌过食燥热", healthTips:"心情愉悦", details:"小雪天气寒冷。" },
-  "大雪": { principle:"温阳补肾，固本培元", foods:["羊肉","红枣","桂圆","核桃"], recipe:"红枣茶", warning:"防寒保暖", healthTips:"适当进补", details:"大雪气温下降。" },
-  "冬至": { principle:"温补阳气，养肾固本", foods:["羊肉","饺子","桂圆","红枣"], recipe:"饺子汤", warning:"忌过度进补", healthTips:"静养为主", details:"冬至白天最短。" },
-  "小寒": { principle:"温阳散寒，补肾健脾", foods:["羊肉","生姜","红枣","枸杞"], recipe:"生姜茶", warning:"防寒保暖", healthTips:"避免剧烈运动", details:"小寒最冷时节。" },
-  "大寒": { principle:"温补脾肾，储备阳气", foods:["糯米","红枣","桂圆","羊肉"], recipe:"八宝饭", warning:"忌暴饮暴食", healthTips:"静待春归", details:"大寒最后一个节气。" }
-};
-const PRECISE_JIEQI_DATES = { "立春":"2月3日","雨水":"2月18日","惊蛰":"3月5日","春分":"3月20日","清明":"4月4日","谷雨":"4月19日","立夏":"5月5日","小满":"5月20日","芒种":"6月5日","夏至":"6月21日","小暑":"7月7日","大暑":"7月22日","立秋":"8月7日","处暑":"8月22日","白露":"9月7日","秋分":"9月22日","寒露":"10月8日","霜降":"10月23日","立冬":"11月7日","小雪":"11月22日","大雪":"12月6日","冬至":"12月21日","小寒":"1月5日","大寒":"1月20日" };
-const JIEQI_ORDER = ["立春","雨水","惊蛰","春分","清明","谷雨","立夏","小满","芒种","夏至","小暑","大暑","立秋","处暑","白露","秋分","寒露","霜降","立冬","小雪","大雪","冬至","小寒","大寒"];
-
-function getNextJieqi() { const today=new Date(); const year=today.getFullYear(); const now=today.getTime(); let candidates=[]; for(let name of JIEQI_ORDER){ let [month,day]=PRECISE_JIEQI_DATES[name].split(/月|日/).filter(s=>s.trim()).map(v=>parseInt(v)); let targetYear=year; if((name==="小寒"||name==="大寒")&&month===1){ if(today.getMonth()===0&&today.getDate()>day) targetYear=year+1; else if(today.getMonth()>0) targetYear=year+1; else targetYear=year; }else{ if(today.getMonth()>month-1||(today.getMonth()===month-1&&today.getDate()>day)) targetYear=year+1; else targetYear=year; } let targetDate=new Date(targetYear,month-1,day); if(!isNaN(targetDate)&&targetDate>=now) candidates.push({name,date:targetDate}); } if(candidates.length===0) candidates.push({name:"立春",date:new Date(year+1,1,3)}); candidates.sort((a,b)=>a.date-b.date); return candidates[0]; }
-function renderSmartRecommendation() { const next=getNextJieqi(); if(!next) return; const bgUrl=JIEQI_BG_IMAGES[next.name]||"https://picsum.photos/id/104/800/500"; const brief=JIEQI_BRIEF[next.name]||`${next.name}时节，顺应天时。`; const dateObj=next.date; const dateStr=`${dateObj.getFullYear()}年${dateObj.getMonth()+1}月${dateObj.getDate()}日`; const weekdays=["星期日","星期一","星期二","星期三","星期四","星期五","星期六"]; const weekday=weekdays[dateObj.getDay()]; document.getElementById('smartJieqiRecommend').innerHTML=`<div class="jieqi-recommend-card" style="background-image: url('${bgUrl}'); background-size: cover; background-position: center 30%;"><div class="recommend-overlay"><div class="recommend-badge-date">${dateStr} · ${weekday}</div><div class="recommend-jieqi-name">${next.name}</div><div class="recommend-feature-text">${brief}</div><button class="recommend-detail-btn" onclick="event.stopPropagation(); showJieqiDetail('${next.name}')">📖 查看食疗方案 →</button></div></div>`; }
-function showJieqiDetail(name) { const detail=JIEQI_DETAIL_MAP[name]||JIEQI_DETAIL_MAP["立春"]; const exactDate=PRECISE_JIEQI_DATES[name]||""; document.getElementById('jieqiDetailContainer').innerHTML=`<div class="jieqi-detail"><div class="jieqi-header"><div class="jieqi-detail-name">${name}</div><div class="jieqi-detail-time">${exactDate}</div><div class="jieqi-detail-principle">养生原则：${detail.principle}</div></div><div class="jieqi-detail-body"><div class="jieqi-section"><div class="jieqi-section-title">节气详解</div><div class="detail-content">${detail.details||''}</div></div><div class="jieqi-section"><div class="jieqi-section-title">推荐食材</div><div>${detail.foods.map(f=>`<span class="foods-tag">${f}</span>`).join('')}</div></div><div class="jieqi-section"><div class="jieqi-section-title">推荐食谱</div><div class="recipe-box">${detail.recipe}</div></div><div class="jieqi-section"><div class="jieqi-section-title">注意事项</div><div class="warning-box">${detail.warning}</div></div><div class="jieqi-section"><div class="jieqi-section-title">养生小贴士</div><div class="detail-content">${detail.healthTips||''}</div></div></div></div>`; document.getElementById('pageJieqiDetail').classList.add('active'); document.getElementById('pageHome').classList.remove('active'); document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); document.querySelector('.nav-link').classList.add('active'); window.scrollTo({top:0}); }
-function renderJieqiCalendar() { const container=document.getElementById('jieqiCalendar'); const next=getNextJieqi(); const nextName=next?next.name:null; let html=''; for(let i=0;i<4;i++){ html+='<div class="jieqi-row">'; for(let j=0;j<6;j++){ const idx=i*6+j; if(idx<JIEQI_ORDER.length){ const name=JIEQI_ORDER[idx]; const dateInfo=PRECISE_JIEQI_DATES[name]||''; const isHighlight=(name===nextName); html+=`<div class="jieqi-cell ${isHighlight?'highlight':''}" onclick="showJieqiDetail('${name}')"><div class="jieqi-cell-name">${name}</div><div class="jieqi-cell-date">${dateInfo}</div></div>`; } } html+='</div>'; } container.innerHTML=html; }
-
-// 症状清洗函数
-function cleanSymptomsText(s) {
-  if(!s) return '';
-  let text = s;
-  // 1. 去掉元数据标签（保留后面的内容）
-  text = text.replace(/基本信息[:：]\s*/g, '');
-  text = text.replace(/主诉[:：]\s*/g, '');
-  text = text.replace(/现病史[:：]\s*/g, '');
-  text = text.replace(/体格检查[:：]\s*/g, '');
-  text = text.replace(/上次就诊内容[:：]\s*/g, '');
-  // 2. 去掉年龄/性别/身高/体重数值
-  text = text.replace(/年龄[:：]?\s*\d+\s*岁?/g, '');
-  text = text.replace(/性别[:：]?\s*[男女]/g, '');
-  text = text.replace(/身高[:：]?\s*[\d.]+\s*(?:cm|厘米)?/g, '');
-  text = text.replace(/体重[:：]?\s*[\d.]+\s*(?:kg|千克)?/g, '');
-  // 3. 去掉治疗相关内容（证型、治法、方剂、中药+克数）
-  text = text.replace(/(?:证型|治法|方剂|中药|西医诊断)[:：]\s*\S+/g, '');
-  // 4. 去掉所有"中药名+数字"的药量写法（如 柴胡15.0、茯苓10.0）
-  text = text.replace(/[一-鿿]{1,6}\d+\.?\d*\s*/g, '');
-  // 6. 清理多余空格和标点
-  text = text.replace(/\s+/g, ' ').trim();
-  text = text.replace(/^[,，、.\s]+/, '').replace(/[,，、.\s]+$/, '');
-  // 7. 截断过长文本
-  if(text.length>400) text = text.substring(0,400)+'…';
-  return text || '（无详细症状描述）';
-}
-function cleanHerbName(herbStr) {
-  if(!herbStr) return [];
-  let herbs = herbStr.split(/\s+/);
-  let cleaned = [];
-  for(let h of herbs){
-    if(!h.trim()) continue;
-    let name = h.replace(/[\d\.]+(?:g|克|ml|毫升)?/g, '').trim();
-    name = name.replace(/[.,，。]$/, '');
-    if(name && name.length>0 && name.length<20 && !name.match(/^[0-9]+$/)) {
-      cleaned.push(name);
-    }
-  }
-  return [...new Map(cleaned.map(h=>[h,h])).values()];
-}
-
-let fullData=[], formulaDatabase={}, currentItem=null, currentMode=null, favorites=[], searchHistory=[];
-const HEALTH_TIPS=["晨起一杯温水助代谢。","春养肝夏养心，顺时调养。","睡前泡脚改善睡眠。","按揉足三里健脾益气。","药食同源，红枣枸杞补气血。"];
-let currentTipIndex=0;
-function refreshHealthTip(){ currentTipIndex=(currentTipIndex+1)%HEALTH_TIPS.length; document.getElementById('healthTipContent').innerHTML=HEALTH_TIPS[currentTipIndex]; }
-function initStorage(){ const f=localStorage.getItem('tcm_favorites'); if(f) favorites=JSON.parse(f); const h=localStorage.getItem('tcm_searchHistory'); if(h) searchHistory=JSON.parse(h); }
-function saveFavorites(){ localStorage.setItem('tcm_favorites',JSON.stringify(favorites)); }
-function saveHistory(){ localStorage.setItem('tcm_searchHistory',JSON.stringify(searchHistory)); }
-function addToHistory(q){ if(!q.trim()) return; searchHistory=searchHistory.filter(h=>h.keyword!==q); searchHistory.unshift({keyword:q,time:new Date().toLocaleString()}); if(searchHistory.length>20) searchHistory.pop(); saveHistory(); }
-function addToFavorite(item,type,name){ if(favorites.some(f=>f.name===name)){ showToast('已在收藏夹'); return false; } favorites.push({name,type,data:item,time:new Date().toLocaleString()}); saveFavorites(); showToast('已收藏'); return true; }
-function removeFromFavorite(name){ favorites=favorites.filter(f=>f.name!==name); saveFavorites(); showToast('已取消收藏'); if(document.getElementById('pageFavorites').classList.contains('active')) renderFavoritesList(); }
-function isFavorited(name){ return favorites.some(f=>f.name===name); }
-function showFavorites(){ renderFavoritesList(); showPage('favorites'); }
-function renderFavoritesList(){ const c=document.getElementById('favoritesList'); document.getElementById('favoritesCount').innerHTML=`共 ${favorites.length} 条收藏`; if(!favorites.length){ c.innerHTML='<div class="empty-state">暂无收藏</div>'; return; } c.innerHTML=favorites.map(fav=>`<div class="list-item" onclick="viewFavorite('${fav.name}')"><div class="list-item-content"><div class="list-item-title">${fav.name}</div><div class="list-item-time">${fav.type==='formula'?'方剂':'医案'} · ${fav.time}</div></div><div class="list-item-delete" onclick="event.stopPropagation();removeFromFavorite('${fav.name}')">删除</div></div>`).join(''); }
-function viewFavorite(name){ const fav=favorites.find(f=>f.name===name); if(!fav) return; if(fav.type==='formula'){ currentMode='formula'; showFormulaDetail({name:fav.name,herbs:fav.data?.herbs||[],effect:fav.data?.effect||''}); showPage('detail'); } else if(fav.data){ currentItem=fav.data; currentMode='case'; showCaseDetailFromItem(fav.data); showPage('detail'); } }
-function showHistory(){ renderHistoryList(); showPage('history'); }
-function renderHistoryList(){ const c=document.getElementById('historyList'); document.getElementById('historyCount').innerHTML=`共 ${searchHistory.length} 条记录`; if(!searchHistory.length){ c.innerHTML='<div class="empty-state">暂无历史</div>'; return; } c.innerHTML=searchHistory.map(h=>`<div class="list-item" onclick="doSearch('${h.keyword}')"><div class="list-item-content"><div class="list-item-title">🔍 ${h.keyword}</div><div class="list-item-time">${h.time}</div></div></div>`).join(''); }
-function clearHistory(){ if(confirm('清空历史?')){ searchHistory=[]; saveHistory(); renderHistoryList(); showToast('已清空'); } }
-function showFeedback(){ showPage('feedback'); }
-function submitFeedback(){ const content=document.getElementById('feedbackContent').value.trim(); if(!content){ showToast('请输入反馈'); return; } let fb=[]; const saved=localStorage.getItem('tcm_feedbacks'); if(saved) fb=JSON.parse(saved); fb.unshift({content,time:new Date().toLocaleString()}); localStorage.setItem('tcm_feedbacks',JSON.stringify(fb)); document.getElementById('feedbackContent').value=''; showToast('感谢反馈'); }
-async function loadData(){ initStorage(); try{ let resp=await fetch('/api/records_count'); let stats=await resp.json(); document.getElementById('heroStatCount').innerHTML=(stats.total_records||0).toLocaleString(); document.getElementById('heroFormulaCount').innerHTML='智能'; window.suggestionFormulas=[“归脾汤”,”桂枝汤”,”六味地黄丸”,”小柴胡汤”,”四君子汤”,”逍遥散”]; document.getElementById('hotSearchGrid').innerHTML=[“归脾汤”,”桂枝汤”,”六味地黄丸”,”失眠”,”咳嗽”,”胃痛”].map(t=>`<button class=”hot-search-item” onclick=”doSearch('${t}')”>${t}</button>`).join(''); }catch(e){ document.getElementById('heroStatCount').innerHTML='-'; document.getElementById('heroFormulaCount').innerHTML='-'; } refreshHealthTip(); renderJieqiCalendar(); renderSmartRecommendation(); }
-async function doSearch(q){ if(!q.trim()) return; addToHistory(q); try{ let resp=await fetch('/api/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q,max_results:20})}); let data=await resp.json(); let res=data.results||[]; document.getElementById('resultsQuery').innerHTML=`”${q}” 检索结果`; document.getElementById('resultsCount').innerHTML=`共 ${res.length} 条`; let c=document.getElementById('resultsList'); if(!res.length) c.innerHTML='<div class=”empty-state”>无结果</div>'; else c.innerHTML=res.map((item,idx)=>`<div class=”result-card” onclick=”showCaseDetail(${idx})”><div class=”result-name”>${item.diagnosis?.replace(/^证型[:：]/,'')||'医案'}</div><div class=”result-type”>方剂：${item.formula?.split(/[\s,，、]/)[0]||''}</div><button class=”export-btn” style=”margin-top:8px;padding:5px 14px;font-size:12px;” onclick=”event.stopPropagation();addToFavorite(item,'case','${item.diagnosis?.replace(/^证型[:：]/,'')||'医案'}')”>❤ 收藏</button></div>`).join(''); window.currentCases=res; showPage('results'); }catch(e){ document.getElementById('resultsList').innerHTML='<div class=”empty-state”>搜索服务暂不可用，请稍后重试</div>'; showPage('results'); } }
-async function showFormulaDetail(f){ let favFlag=isFavorited(f.name); try{ let resp=await fetch('/api/formula',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name})}); let data=await resp.json(); if(data.found){ let herbs=cleanHerbName(data.herbs||''); let herbsHtml=herbs.length?`<div class=”formula-section”><div class=”formula-section-title”>方剂组成</div><div class=”herb-grid”>${herbs.map(h=>`<span class=”herb-item”>${h}</span>`).join('')}</div></div>`:''; let effectHtml=data.diagnosis&&data.diagnosis!=='null'?`<div class=”formula-section”><div class=”formula-section-title”>功效参考</div><div class=”effect-text”>${data.diagnosis.replace(/^证型[:：]/,'')}</div></div>`:''; document.getElementById('detailContainer').innerHTML=`<div class=”formula-detail-card”><div class=”formula-header”><div class=”formula-name”>${f.name}</div></div><div class=”formula-body”>${herbsHtml}${effectHtml}<div style=”text-align:center; margin-top:24px;”><button class=”export-btn” onclick=”toggleFavoriteFormula('${f.name}')”>${favFlag?'❤ 已收藏':'☆ 收藏'}</button></div></div></div>`; }else{ document.getElementById('detailContainer').innerHTML=`<div class=”formula-detail-card”><div class=”formula-header”><div class=”formula-name”>${f.name}</div></div><div class=”formula-body”><div class=”case-text”>该方剂暂无详细数据</div><div style=”text-align:center; margin-top:24px;”><button class=”export-btn” onclick=”toggleFavoriteFormula('${f.name}')”>${favFlag?'❤ 已收藏':'☆ 收藏'}</button></div></div></div>`; } }catch(e){ document.getElementById('detailContainer').innerHTML=`<div class=”formula-detail-card”><div class=”formula-header”><div class=”formula-name”>${f.name}</div></div><div class=”formula-body”><div class=”case-text”>数据加载失败</div></div></div>`; } showPage('detail'); }
-function toggleFavoriteFormula(name){ if(isFavorited(name)) removeFromFavorite(name); else addToFavorite({},'formula',name); if(currentItem?.name===name) showFormulaDetail(currentItem); }
-function showCaseDetail(idx){ let item=window.currentCases[idx]; currentItem=item; currentMode='case'; let diag=item.diagnosis?.replace(/^证型[:：]/,'')||''; let fn=item.formula?.split(/[\s,，、]/)[0]||''; let itemName=diag||fn||'医案'; let cleaned=cleanHerbName(item.herbs||''); let symp=cleanSymptomsText(item.symptoms||''); let html=`<div class="case-detail-card"><div class="case-header"><div class="case-title">病情分析</div></div><div class="case-body">${diag?`<div class="case-section"><div class="case-section-title">证型诊断</div><div class="case-text">${diag}</div></div>`:''}${fn?`<div class="case-section"><div class="case-section-title">推荐方剂</div><div class="case-text">${fn}</div></div>`:''}${cleaned.length?`<div class="case-section"><div class="case-section-title">中药组成</div><div class="herb-grid">${cleaned.map(h=>`<span class="herb-item">${h}</span>`).join('')}</div></div>`:''}${symp?`<div class="case-section"><div class="case-section-title">症状表现</div><div class="symptoms-text">${symp}</div></div>`:''}<div style="text-align:center; margin-top:24px;"><button class="export-btn" onclick="toggleFavoriteCase('${itemName}')">${isFavorited(itemName)?'❤ 已收藏':'☆ 收藏'}</button></div></div></div>`; document.getElementById('detailContainer').innerHTML=html; showPage('detail'); }
-function showCaseDetailFromItem(item){ let diag=item.diagnosis?.replace(/^证型[:：]/,'')||''; let fn=item.formula?.split(/[\s,，、]/)[0]||''; let itemName=diag||fn||'医案'; let cleaned=cleanHerbName(item.herbs||''); let symp=cleanSymptomsText(item.symptoms||''); let html=`<div class="case-detail-card"><div class="case-header"><div class="case-title">病情分析</div></div><div class="case-body">${diag?`<div class="case-section"><div class="case-section-title">证型诊断</div><div class="case-text">${diag}</div></div>`:''}${fn?`<div class="case-section"><div class="case-section-title">推荐方剂</div><div class="case-text">${fn}</div></div>`:''}${cleaned.length?`<div class="case-section"><div class="case-section-title">中药组成</div><div class="herb-grid">${cleaned.map(h=>`<span class="herb-item">${h}</span>`).join('')}</div></div>`:''}${symp?`<div class="case-section"><div class="case-section-title">症状表现</div><div class="symptoms-text">${symp}</div></div>`:''}<div style="text-align:center; margin-top:24px;"><button class="export-btn" onclick="toggleFavoriteCase('${itemName}')">${isFavorited(itemName)?'❤ 已收藏':'☆ 收藏'}</button></div></div></div>`; document.getElementById('detailContainer').innerHTML=html; showPage('detail'); }
-function toggleFavoriteCase(name){ if(isFavorited(name)) removeFromFavorite(name); else addToFavorite(currentItem,'case',name); if(currentMode==='case') showCaseDetailFromItem(currentItem); }
-function exportCurrent(){ let text=''; if(currentMode==='formula') text=`方剂：${currentItem.name}\n组成：${currentItem.herbs?.join('、')||''}`; else text=`证型：${currentItem.diagnosis}\n方剂：${currentItem.formula}\n症状：${cleanSymptomsText(currentItem.symptoms)}`; navigator.clipboard.writeText(text); showToast('已复制'); }
-function showToast(msg){ let t=document.createElement('div'); t.className='toast'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2000); }
-function showPage(page){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); if(page==='aiChat') page='home'; const pageId = `page${page.charAt(0).toUpperCase()+page.slice(1)}`; const pageEl = document.getElementById(pageId); if(pageEl) pageEl.classList.add('active'); document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); if(page==='home') document.querySelector('.nav-link').classList.add('active'); else if(page==='profile') document.querySelectorAll('.nav-link')[2].classList.add('active'); window.scrollTo({top:0}); }
-function goBackFromResults(){ showPage('home'); }
-function goBackFromDetail(){ showPage(currentMode==='formula'?'home':'results'); }
-function goBackToProfile(){ showPage('profile'); }
-function backToHome(){ showPage('home'); }
-function onSearchInput(v){ const sugDiv=document.getElementById('searchSuggestions'); if(!v.trim()){ sugDiv.classList.remove('show'); return; } const filtered=(window.suggestionFormulas||[]).filter(s=>s.includes(v)).slice(0,6); if(filtered.length){ sugDiv.innerHTML=filtered.map(s=>`<div class="suggestion-item" onclick="doSearch('${s}')">${s}</div>`).join(''); sugDiv.classList.add('show'); } else sugDiv.classList.remove('show'); }
-// ======================== AI聊天诊疗逻辑 ========================
-const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+const API_BASE = window.location.origin;
 const DEEPSEEK_MODEL = 'deepseek-chat';
-let chatApiKey = localStorage.getItem('tcm_chat_api_key') || '';
-let chatHistory = [];  // 存储对话历史
+let chatHistory = [];
 let isWaitingReply = false;
 
-// 系统提示词
-const SYSTEM_PROMPT = '你是一位资深、温和、专业的中医诊疗AI助手。请严格按以下规则与患者对话：\n\n【格式要求】\n- 回复中绝对禁止出现任何星号字符（*），一个都不能有\n- 禁止使用任何Markdown格式标记\n- 小标题使用中文方括号【标题】格式\n- 语气温和有共情，分析专业\n- 使用中医术语时必须通俗解释\n- 回复300-600字，层次分明';
-
-function ensureApiKey(){
-  if(!chatApiKey){
-    const key=prompt('请输入DeepSeek API Key（在 platform.deepseek.com 获取）：\n\nAPI Key将以加密方式保存在浏览器本地存储中，不会上传到任何服务器。');
-    if(key && key.trim()){
-      chatApiKey=key.trim();
-      localStorage.setItem('tcm_chat_api_key',chatApiKey);
-      showToast('✅ API Key已保存');
-    }
-  }
-  return !!chatApiKey;
-}
-
-function changeApiKey(){
-  const currentKey=chatApiKey?'当前已设置Key: '+chatApiKey.slice(0,6)+'...'+chatApiKey.slice(-4):'当前未设置API Key';
-  const key=prompt(currentKey+'\n\n请输入新的DeepSeek API Key（留空则清除）：\n\n获取地址：platform.deepseek.com → API Keys');
-  if(key===null) return;  // 取消
-  if(key.trim()){
-    chatApiKey=key.trim();
-    localStorage.setItem('tcm_chat_api_key',chatApiKey);
-    showToast('✅ API Key已更新');
-  } else {
-    chatApiKey='';
-    localStorage.removeItem('tcm_chat_api_key');
-    showToast('🗑 API Key已清除');
-  }
-}
-
-function renderWelcomeMessage(){
-  chatHistory=[];
-  document.getElementById('chatMessages').innerHTML=`
-    <div class="chat-msg ai">
-      <div class="chat-avatar">🌿</div>
-      <div class="chat-bubble">
-        <p>您好，我是<b>本草AI诊疗助手</b>。👋</p>
-        <p>请告诉我您的<b>主要症状</b>，我会：</p>
-        <p>🔴 先帮您<b>排查危险信号</b><br>🟢 进行<b>症状分型</b>分析<br>💡 给出<b>具体应对方案</b><br>⚠️ 提供<b>用药安全提示</b></p>
-        <p style="margin-top:8px;color:var(--text-gray);font-size:13px;">您可以点击上方快捷按钮，或直接输入症状描述。</p>
-      </div>
-    </div>`;
+function showMsg(msg){
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:#1a5a2a;color:white;padding:10px 24px;border-radius:30px;font-size:14px;z-index:9999;animation:fadeInOut 2s ease;';
+  t.innerText = msg; document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2000);
 }
 
 function addMessage(role, content){
-  const msgs=document.getElementById('chatMessages');
-  const avatarIcon=role==='ai'?'🌿':'👤';
-  const cls=role==='ai'?'ai':'user';
-  // 后处理：移除所有星号，格式化【标题】
-  let cleaned=content.replace(/\*\*/g,'').replace(/\*/g,'');
-  cleaned=cleaned.replace(/【([^】]+)】/g, '<span style="font-size:1.15em;font-weight:700;">【$1】</span>');
-  let html=cleaned.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-  msgs.innerHTML+='<div class="chat-msg '+cls+'"><div class="chat-avatar">'+avatarIcon+'</div><div class="chat-bubble">'+html+'</div></div>';
-  msgs.scrollTop=msgs.scrollHeight;
-}"><div class="chat-avatar">${avatarIcon}</div><div class="chat-bubble">${html}</div></div>`;
-  msgs.scrollTop=msgs.scrollHeight;
+  const msgs = document.getElementById('chatMessages');
+  const avatarIcon = role==='ai' ? '🌿' : '👤';
+  const cls = role==='ai' ? 'ai' : 'user';
+  let cleaned = content.replace(/\*\*/g,'').replace(/\*/g,'');
+  cleaned = cleaned.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  cleaned = cleaned.replace(/【([^】]+)】/g, '<span style="font-size:1.15em;font-weight:700;">【$1】</span>');
+  let html = cleaned.replace(/\n/g,'<br>');
+  msgs.innerHTML += '<div class="chat-msg '+cls+'"><div class="chat-avatar">'+avatarIcon+'</div><div class="chat-bubble">'+html+'</div></div>';
+  msgs.scrollTop = msgs.scrollHeight;
 }
 
-function addTypingIndicator(){
-  const msgs=document.getElementById('chatMessages');
-  msgs.innerHTML+=`<div class="chat-msg ai" id="typingMsg"><div class="chat-avatar">🌿</div><div class="chat-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div></div>`;
-  msgs.scrollTop=msgs.scrollHeight;
+function addTyping(){
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML += '<div class="chat-msg ai" id="typingMsg"><div class="chat-avatar">🌿</div><div class="chat-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div></div>';
+  msgs.scrollTop = msgs.scrollHeight;
 }
+function removeTyping(){ const t = document.getElementById('typingMsg'); if(t) t.remove(); }
 
-function removeTypingIndicator(){
-  const typing=document.getElementById('typingMsg');
-  if(typing) typing.remove();
-}
-
-async function sendChatMessage(msgOverride){
+async function sendMessage(msgOverride){
   if(isWaitingReply) return;
-  const input=document.getElementById('chatInput');
-  const userMsg=(msgOverride||input.value).trim();
+  const input = document.getElementById('chatInput');
+  const userMsg = (msgOverride || input.value).trim();
   if(!userMsg) return;
 
-  isWaitingReply=true;
-  document.getElementById('chatSendBtn').disabled=true;
-  if(!msgOverride) input.value='';
+  isWaitingReply = true;
+  document.getElementById('chatSendBtn').disabled = true;
+  if(!msgOverride) input.value = '';
 
-  // 收集基础信息（首次对话时自动附上）
-  let fullMsg=userMsg;
-  if(chatHistory.length===0){
-    const name=document.getElementById('chatName').value.trim();
-    const gender=document.getElementById('chatGender').value;
-    const age=document.getElementById('chatAge').value.trim();
-    const height=document.getElementById('chatHeight').value.trim();
-    const weight=document.getElementById('chatWeight').value.trim();
-    let infoParts=[];
-    if(gender) infoParts.push('性别：'+gender);
-    if(age) infoParts.push('年龄：'+age+'岁');
-    if(height) infoParts.push('身高：'+height+'cm');
-    if(weight) infoParts.push('体重：'+weight+'kg');
-    if(infoParts.length>0){
-      fullMsg='【患者基本信息】'+infoParts.join('，')+'\n\n【主诉】'+userMsg;
-    }
-  }
-
-  addMessage('user',userMsg);
-  chatHistory.push({role:'user',content:fullMsg});
-  addTypingIndicator();
+  addMessage('user', userMsg);
+  chatHistory.push({role:'user', content:userMsg});
+  addTyping();
 
   try{
-    const messages=[
-      {role:'system',content:SYSTEM_PROMPT},
-      ...chatHistory.slice(-10)
-    ];
-    const API_BASE = 'http://127.0.0.1:5000';
-    const resp=await fetch(API_BASE+'/api/chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages,api_key:chatApiKey})
+    const resp = await fetch(API_BASE+'/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        messages: [
+          {role:'system', content: SYSTEM_PROMPT},
+          ...chatHistory.slice(-10)
+        ],
+        force_llm: true
+      })
     });
-    const data=await resp.json();
-    removeTypingIndicator();
+    const data = await resp.json();
+    removeTyping();
 
     if(data.error){
-      addMessage('ai','⚠️ '+data.error);
+      addMessage('ai', '⚠️ 服务暂时不可用：'+data.error+'\n\n请稍后重试，或联系管理员检查服务端 API Key 配置。');
     } else if(data.reply){
-      // 标注模式：LLM 或专业版
-      const modeTag = data.mode==='llm' ? '' : '\n\n（💡 专业版模式——无需 API Key，基于中医知识库自动分析。配置 LLM_API_KEY 可启用大模型深度诊断）';
-      addMessage('ai',data.reply + modeTag);
-      chatHistory.push({role:'assistant',content:data.reply});
+      addMessage('ai', data.reply);
+      chatHistory.push({role:'assistant', content:data.reply});
     } else {
-      addMessage('ai','⚠️ 未收到有效回复，请稍后重试。');
+      addMessage('ai', '⚠️ 未收到有效回复，请稍后重试。');
     }
   }catch(e){
-    removeTypingIndicator();
-    addMessage('ai','⚠️ 连接后端失败。请确认已启动 Flask 服务（python app.py），然后刷新页面。\n错误信息：'+e.message);
+    removeTyping();
+    addMessage('ai', '⚠️ 连接后端失败。\n错误：'+e.message+'\n\n请确认后端服务已启动。');
   }
-  isWaitingReply=false;
-  document.getElementById('chatSendBtn').disabled=false;
+  isWaitingReply = false;
+  document.getElementById('chatSendBtn').disabled = false;
   document.getElementById('chatInput').focus();
 }
 
-function sendQuickExample(symptom){
-  document.getElementById('chatInput').value=symptom;
-  sendChatMessage(symptom);
+function sendQuick(symptom){
+  document.getElementById('chatInput').value = symptom;
+  sendMessage(symptom);
 }
 
 function clearChat(){
   if(!confirm('确定清空当前对话记录吗？')) return;
-  chatHistory=[];
-  renderWelcomeMessage();
-  document.getElementById('chatInput').value='';
-  showToast('对话已清空');
+  chatHistory = [];
+  document.getElementById('chatMessages').innerHTML = '<div class="chat-msg ai"><div class="chat-avatar">🌿</div><div class="chat-bubble">对话已清空。请描述您的症状，我将为您进行深度分析。</div></div>';
+  document.getElementById('chatInput').value = '';
 }
 
-loadData();
+const SYSTEM_PROMPT = '你是一位资深、温和、专业的中医诊疗AI——"本草AI·大模型版"。请严格按以下规则工作：\n\n【核心规则】\n1. 危险信号排查（必须最先）：雷击样头痛、伴有神经症状、颈部僵硬+发烧、外伤后头痛 → 立即建议就医\n2. 分型分析：根据具体症状进行中医辨证\n3. 具体方案：推荐方剂、中药剂量、穴位、食疗建议\n4. 用药安全提示：禁忌人群、注意事项\n5. 结尾追问：每次追问1-2个关键问题\n\n【风格要求-务必严格遵守】\n- 回复中绝对禁止出现任何星号字符（*），绝对不能有**或*符号\n- 禁止使用任何Markdown格式\n- 小标题请用中文方括号【标题】形式\n- 语气温和有共情，分析专业\n- 中医术语必须通俗解释\n- 回复300-600字';
 </script>
 </body>
 </html>
