@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>本草问诊AI · 大模型深度诊疗 | DeepSeek 驱动</title>
+<title>大众版 · 本草问诊 | AI 智能诊疗</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -159,18 +159,18 @@ body {
 <header class="header">
   <a class="logo" href="/">
     <div class="logo-icon">🌿</div>
-    <div><div class="logo-text">本草问诊AI</div><div class="logo-sub">AI 大模型深度诊疗</div></div>
+    <div><div class="logo-text">本草问诊</div><div class="logo-sub">AI 智能诊疗</div></div>
   </a>
   <div style="display:flex;align-items:center;gap:12px;">
-    <span class="badge-llm">LLM 增强版</span>
+    <span class="badge-llm">大众版</span>
   </div>
 </header>
 
 <div class="main-container">
 
-  <!-- LLM 能力说明 -->
+  <!-- 能力说明 -->
   <div class="info-card">
-    <h3>🧠 DeepSeek 大模型 vs 专业版</h3>
+    <h3>🧠 AI 大众版 vs 专业版</h3>
     <ul>
       <li>更精准的辨证分型（28种复合证型全覆盖）</li>
       <li>个性化方剂推荐（结合年龄、体质、症状综合分析）</li>
@@ -183,8 +183,8 @@ body {
   <!-- 聊天区域 -->
   <div class="chat-card">
     <div class="chat-card-header">
-      <h2>💬 大模型智能诊疗</h2>
-      <p>DeepSeek 驱动 · 中医辨证 · 千人千面 · 服务端 Key 已启用</p>
+      <h2>💬 AI 智能诊疗</h2>
+      <p>AI 智能诊疗 · 中医辨证 · 服务端 Key 已启用</p>
     </div>
     <div class="quick-examples">
       <span>⚡ 快速体验：</span>
@@ -197,7 +197,7 @@ body {
       <div class="chat-msg ai">
         <div class="chat-avatar">🌿</div>
         <div class="chat-bubble" style="font-size:15px;line-height:1.8;">
-          您好，我是<b>本草问诊AI · 大模型版</b>，由 DeepSeek 驱动。🌿<br><br>
+          您好，我是<b>本草问诊 · 大众版</b>，AI 智能诊疗助手。🌿<br><br>
           与专业版不同，我将为您提供：<br>
           🔮 <b>深度辨证分析</b>（结合您的具体体质）<br>
           📜 <b>个性化方药推荐</b>（参考 31 万例医案）<br>
@@ -217,7 +217,7 @@ body {
   </div>
 
   <div class="version-footer">
-    🟢 服务端 Key 已启用 · 无需自备 API Key · DeepSeek 驱动
+    🟢 服务端 Key 已启用 · 无需自备 API Key · AI 大众版
   </div>
 
 </div>
@@ -312,7 +312,7 @@ function clearChat(){
   document.getElementById('chatInput').value = '';
 }
 
-const SYSTEM_PROMPT = '你是一位资深、温和、专业的中医诊疗AI——"本草AI·大模型版"。请严格按以下规则工作：\n\n【核心规则】\n1. 危险信号排查（必须最先）：雷击样头痛、伴有神经症状、颈部僵硬+发烧、外伤后头痛 → 立即建议就医\n2. 分型分析：根据具体症状进行中医辨证\n3. 具体方案：推荐方剂、中药剂量、穴位、食疗建议\n4. 用药安全提示：禁忌人群、注意事项\n5. 结尾追问：每次追问1-2个关键问题\n\n【风格要求-务必严格遵守】\n- 回复中绝对禁止出现任何星号字符（*），绝对不能有**或*符号\n- 禁止使用任何Markdown格式\n- 小标题请用中文方括号【标题】形式\n- 语气温和有共情，分析专业\n- 中医术语必须通俗解释\n- 回复300-600字';
+const SYSTEM_PROMPT = '你是一位资深、温和、专业的中医诊疗AI——"本草问诊·大众版"。请严格按以下规则工作：\n\n【核心规则】\n1. 危险信号排查（必须最先）：雷击样头痛、伴有神经症状、颈部僵硬+发烧、外伤后头痛 → 立即建议就医\n2. 分型分析：根据具体症状进行中医辨证\n3. 具体方案：推荐方剂、中药剂量、穴位、食疗建议\n4. 用药安全提示：禁忌人群、注意事项\n5. 结尾追问：每次追问1-2个关键问题\n\n【风格要求-务必严格遵守】\n- 回复中绝对禁止出现任何星号字符（*），绝对不能有**或*符号\n- 禁止使用任何Markdown格式\n- 小标题请用中文方括号【标题】形式\n- 语气温和有共情，分析专业\n- 中医术语必须通俗解释\n- 回复300-600字';
 </script>
 </body>
 </html>
