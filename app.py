@@ -964,28 +964,50 @@ def records_count():
     })
 
 
-def _search_file_json(filepath, query, max_results):
-    """逐文件 JSON 加载搜索（单文件约80MB内存，处理完立即释放）"""
+def _search_file_text(filepath, query, max_results):
+    """文本方式搜索：找到匹配片段，只 json.loads 那几条记录（内存极省）"""
     results = []
     try:
         with open(filepath, 'r', encoding='utf-8') as f:
-            records = json.load(f)
-        for r in records:
-            sym = (r.get('symptoms', '') or '').lower()
-            diag = (r.get('diagnosis', '') or '').lower()
-            fm = (r.get('formula', '') or '').lower()
-            if query in sym or query in diag or query in fm:
-                results.append({
-                    'symptoms': (r.get('symptoms', '') or '')[:500],
-                    'diagnosis': (r.get('diagnosis', '') or '')[:200],
-                    'formula': (r.get('formula', '') or '')[:200],
-                    'herbs': (r.get('herbs', '') or '')[:500],
-                })
-                if len(results) >= max_results:
-                    break
-        del records
-    except MemoryError:
-        logger.error(f'搜索 {os.path.basename(filepath)} 内存不足，已返回 {len(results)} 条')
+            text = f.read()
+        pos = 0
+        while pos < len(text) and len(results) < max_results:
+            idx = text.find(query, pos)
+            if idx == -1:
+                break
+            # 向前找最近的 {
+            brace = text.rfind('{', 0, idx)
+            if brace == -1:
+                pos = idx + len(query)
+                continue
+            # 向后匹配完整的 {} 块
+            depth = 0
+            end = brace
+            for j in range(brace, min(brace + 5000, len(text))):
+                if text[j] == '{':
+                    depth += 1
+                elif text[j] == '}':
+                    depth -= 1
+                    if depth == 0:
+                        end = j + 1
+                        break
+            if end > brace:
+                try:
+                    rec = json.loads(text[brace:end])
+                    sym = (rec.get('symptoms', '') or '').lower()
+                    diag = (rec.get('diagnosis', '') or '').lower()
+                    fm = (rec.get('formula', '') or '').lower()
+                    if query in sym or query in diag or query in fm:
+                        results.append({
+                            'symptoms': (rec.get('symptoms', '') or '')[:500],
+                            'diagnosis': (rec.get('diagnosis', '') or '')[:200],
+                            'formula': (rec.get('formula', '') or '')[:200],
+                            'herbs': (rec.get('herbs', '') or '')[:500],
+                        })
+                except json.JSONDecodeError:
+                    pass
+            pos = end if end > brace else idx + len(query)
+        del text
     except Exception as e:
         logger.error(f'搜索 {os.path.basename(filepath)} 出错: {e}')
     return results
@@ -1009,7 +1031,7 @@ def search_records():
         filepath = os.path.join(DATA_DIR, f'medical_records_part{i}.json')
         if not os.path.exists(filepath):
             continue
-        new_results = _search_file_json(filepath, query, max_results - len(results))
+        new_results = _search_file_text(filepath, query, max_results - len(results))
         results.extend(new_results)
         gc.collect()
         if len(results) >= max_results:
@@ -1025,7 +1047,7 @@ def search_records():
 @app.route('/api/formula', methods=['POST'])
 def lookup_formula():
     """
-    根据方剂名称查找详细信息（逐文件 JSON 加载，找到即停）
+    根据方剂名称查找详细信息（文本搜索，只解析匹配记录）
     """
     data = request.get_json()
     if not data or not data.get('name', '').strip():
@@ -1038,20 +1060,33 @@ def lookup_formula():
             continue
         try:
             with open(filepath, 'r', encoding='utf-8') as f:
-                records = json.load(f)
-            for r in records:
-                formula = (r.get('formula', '') or '').strip()
-                if formula.startswith(fname) or fname in formula.split():
-                    result = jsonify({
-                        'found': True,
-                        'name': fname,
-                        'herbs': (r.get('herbs', '') or '')[:500],
-                        'diagnosis': (r.get('diagnosis', '') or '')[:200],
-                        'symptoms': (r.get('symptoms', '') or '')[:500],
+                text = f.read()
+            idx = text.find(fname)
+            if idx == -1:
+                del text
+                continue
+            brace = text.rfind('{', 0, idx)
+            if brace == -1:
+                del text
+                continue
+            depth = 0
+            end = brace
+            for j in range(brace, min(brace + 5000, len(text))):
+                if text[j] == '{': depth += 1
+                elif text[j] == '}':
+                    depth -= 1
+                    if depth == 0: end = j + 1; break
+            if end > brace:
+                rec = json.loads(text[brace:end])
+                if fname in (rec.get('formula', '') or ''):
+                    del text
+                    return jsonify({
+                        'found': True, 'name': fname,
+                        'herbs': (rec.get('herbs', '') or '')[:500],
+                        'diagnosis': (rec.get('diagnosis', '') or '')[:200],
+                        'symptoms': (rec.get('symptoms', '') or '')[:500],
                     })
-                    del records
-                    return result
-            del records
+            del text
         except Exception as e:
             logger.error(f'查找方剂 {os.path.basename(filepath)} 出错: {e}')
 
