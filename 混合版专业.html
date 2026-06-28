@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>专业版 · 本草问诊 | 中医药辅助诊疗系统 | 31万医案检索</title>
+<title>专业版 · 本草问诊 | 31万医案 · 节气养生 · 体质测评</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -228,6 +228,35 @@ body {
 .content {
   flex: 1;
   min-width: 0;
+}
+
+/* 全局免责提示条 - 无本地记忆，每次刷新都显示 */
+.global-disclaimer {
+  background: #fff3e0;
+  border-left: 5px solid #ff9800;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #b26a00;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.global-disclaimer strong {
+  font-weight: 700;
+}
+.global-disclaimer .close-disclaimer {
+  margin-left: auto;
+  cursor: pointer;
+  font-size: 16px;
+  color: #b26a00;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.global-disclaimer .close-disclaimer:hover {
+  opacity: 1;
 }
 
 .stats-grid {
@@ -819,203 +848,166 @@ body {
 
 @media (max-width: 900px) { .sidebar { display: none; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .jieqi-row { grid-template-columns: repeat(3, 1fr); } .recommend-feature-text { max-width: 100%; } .recommend-jieqi-name { font-size: 32px; } .jieqi-detail-body { padding: 20px; } .jieqi-header { padding: 24px 20px; } .case-body, .formula-body { padding: 24px 20px; } }
 
-/* ======================== AI多轮问诊样式 ======================== */
-.consult-container { max-width: 800px; margin: 0 auto; }
-
-/* 步骤指示器 */
-.step-indicator { display: flex; align-items: center; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; gap: 0; }
-.step-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--gray-border); color: var(--text-gray); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; transition: all 0.3s; position: relative; z-index: 1; }
-.step-dot.active { background: var(--primary); color: white; box-shadow: 0 0 0 6px rgba(45,122,58,0.15); }
-.step-dot.done { background: var(--primary-dark); color: white; }
-.step-line { flex: 0 0 36px; height: 2px; background: var(--gray-border); margin: 0; transition: background 0.3s; }
-.step-line.done { background: var(--primary); }
-.step-label { font-size: 11px; color: var(--text-gray); text-align: center; margin-top: 6px; }
-.step-item { display: flex; flex-direction: column; align-items: center; }
-
-/* 问诊卡片 */
-.consult-card { background: white; border-radius: var(--radius); padding: 28px 30px; box-shadow: var(--shadow); border: 1px solid var(--gray-border); margin-bottom: 20px; }
-.consult-card-title { font-family: 'Noto Serif SC', serif; font-size: 20px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; letter-spacing: 0.4px; }
-.consult-card-subtitle { font-size: 14px; color: var(--text-gray); margin-bottom: 20px; letter-spacing: 0.3px; }
-
-/* 表单样式 */
-.consult-form { display: flex; flex-direction: column; gap: 16px; }
-.form-row { display: flex; gap: 16px; flex-wrap: wrap; }
-.form-group { flex: 1; min-width: 140px; }
-.form-group label { display: block; font-size: 14px; font-weight: 600; color: var(--text-dark); margin-bottom: 6px; letter-spacing: 0.3px; }
-.form-group label .required { color: #e74c3c; margin-left: 2px; }
-.form-group input, .form-group select, .form-group textarea {
-  width: 100%; padding: 11px 15px; border: 1px solid var(--gray-border); border-radius: var(--radius-sm);
-  font-size: 15px; font-family: inherit; color: var(--text-dark); background: var(--gray-bg);
-  transition: border-color 0.2s; outline: none; letter-spacing: 0.3px;
+/* 体质测评样式 */
+.constitution-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-border);
 }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary); background: white; }
-.form-group textarea { min-height: 100px; resize: vertical; }
-
+.quiz-progress {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--primary-light);
+}
+.progress-text {
+  font-size: 14px;
+  color: var(--primary);
+  font-weight: 500;
+}
+.question-item {
+  margin-bottom: 28px;
+  padding: 16px;
+  background: var(--gray-bg);
+  border-radius: var(--radius-sm);
+}
+.question-text {
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-dark);
+  background: white;
+  padding: 6px 14px;
+  border-radius: 30px;
+  border: 1px solid var(--gray-border);
+  transition: all 0.2s;
+}
+.option-label:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+}
+.option-label input {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+}
+.quiz-actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
 .btn-primary {
-  background: var(--primary); color: white; border: none; padding: 12px 32px; border-radius: 30px;
-  font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex;
-  align-items: center; gap: 8px; justify-content: center; font-family: inherit;
+  background: var(--primary);
+  border: none;
+  padding: 12px 32px;
+  border-radius: 40px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: var(--shadow-hover); }
-.btn-primary:disabled { background: var(--gray-border); cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
 .btn-secondary {
-  background: var(--gray-bg); color: var(--text-dark); border: 1px solid var(--gray-border);
-  padding: 10px 24px; border-radius: 30px; font-size: 14px; cursor: pointer; transition: all 0.2s; font-family: inherit;
+  background: var(--gray-bg);
+  border: 1px solid var(--gray-border);
+  padding: 10px 20px;
+  border-radius: 40px;
+  color: var(--text-dark);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.btn-secondary:hover { background: var(--gray-border); }
+.btn-secondary:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+}
+.report-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-border);
+}
+.constitution-badge {
+  display: inline-block;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  padding: 6px 18px;
+  border-radius: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.report-section {
+  margin: 24px 0;
+  padding: 16px;
+  background: var(--gray-bg);
+  border-radius: var(--radius-sm);
+}
+.recipe-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+.recipe-item {
+  background: white;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 14px;
+  border-left: 3px solid var(--primary);
+}
+.score-bar {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+.score-bar span {
+  width: 70px;
+}
 
-/* 追问问题卡片 */
-.question-card { background: var(--primary-light); border-radius: var(--radius); padding: 24px; border: 1px solid rgba(45,122,58,0.2); margin-bottom: 20px; }
-.question-text { font-size: 16px; font-weight: 600; color: var(--primary-dark); margin-bottom: 16px; }
-.question-type-badge { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 20px; background: var(--primary); color: white; margin-left: 8px; }
-
-/* 选项按钮 */
-.options-grid { display: flex; flex-wrap: wrap; gap: 10px; }
-.option-btn {
-  padding: 10px 20px; border: 2px solid var(--gray-border); border-radius: 30px; background: white;
-  font-size: 14px; cursor: pointer; transition: all 0.2s; font-family: inherit; color: var(--text-dark);
-  user-select: none;
+/* 免责提示样式（体质测评专用） */
+.disclaimer-warning {
+  background: #fff3e0;
+  border-left: 5px solid #ff9800;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #b26a00;
 }
-.option-btn:hover { border-color: var(--primary); background: var(--primary-light); }
-.option-btn.selected { border-color: var(--primary); background: var(--primary); color: white; font-weight: 600; }
-
-/* 匹配计数 */
-.match-count { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 20px; font-size: 13px; margin-bottom: 16px; }
-.match-count.many { background: #fff3cd; color: #856404; }
-.match-count.few { background: var(--primary-light); color: var(--primary-dark); }
-
-/* 诊断结果 */
-.diagnosis-result { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--gray-border); }
-.diag-section { padding: 20px 24px; border-bottom: 1px solid var(--gray-border); }
-.diag-section:last-child { border-bottom: none; }
-.diag-section-title { font-family: 'Noto Serif SC', serif; font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-.diag-section-content { font-size: 14px; line-height: 1.8; color: var(--text-dark); white-space: pre-wrap; }
-.diag-highlight { background: var(--secondary-light); padding: 16px 20px; border-radius: var(--radius-sm); border-left: 4px solid var(--secondary); }
-
-/* 术语解释 */
-.term-explain-area { margin-top: 24px; }
-.term-explain-input { display: flex; gap: 10px; }
-.term-explain-input input { flex: 1; }
-.term-explain-result { margin-top: 16px; padding: 16px 20px; background: var(--secondary-light); border-radius: var(--radius-sm); font-size: 14px; line-height: 1.8; display: none; }
-.term-explain-result.show { display: block; }
-
-/* 加载动画 */
-.loading-spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-dots { display: flex; gap: 6px; align-items: center; justify-content: center; padding: 20px; }
-.loading-dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: dotBounce 1.4s ease-in-out infinite; }
-.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes dotBounce { 0%,80%,100% { transform: scale(0); opacity: 0.3; } 40% { transform: scale(1); opacity: 1; } }
-
-/* 复诊按钮 */
-.restart-btn { margin-top: 20px; text-align: center; }
-.warning-box { background: #fff8e1; border: 1px solid #ffe082; border-radius: var(--radius-sm); padding: 12px 16px; font-size: 13px; color: #8d6e00; margin-top: 16px; }
-
-/* Toast 消息 */
-.toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: var(--text-dark); color: white; padding: 10px 24px; border-radius: 30px; font-size: 14px; z-index: 9999; animation: fadeInOut 2s ease; }
-@keyframes fadeInOut { 0% { opacity: 0; transform: translateX(-50%) translateY(-10px); } 20% { opacity: 1; transform: translateX(-50%) translateY(0); } 80% { opacity: 1; } 100% { opacity: 0; } }
-
-@media (max-width: 600px) { .consult-card { padding: 20px; } .form-row { flex-direction: column; } .options-grid { flex-direction: column; } .option-btn { text-align: center; } }
-
-/* ======================== AI聊天诊疗样式 ======================== */
-.chat-container { max-width: 780px; margin: 0 auto; }
-.chat-header-area {
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-  color: white; padding: 26px 30px; border-radius: var(--radius) var(--radius) 0 0;
-  margin-bottom: 0;
-}
-.chat-header-area h2 { font-family: 'Noto Serif SC', serif; font-size: 22px; margin: 0 0 6px 0; display: flex; align-items: center; gap: 8px; letter-spacing: 0.5px; }
-.chat-header-area p { font-size: 14px; opacity: 0.9; margin: 0; letter-spacing: 0.3px; line-height: 1.6; }
-
-.quick-examples {
-  background: white; padding: 16px 22px; border-bottom: 1px solid var(--gray-border);
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-}
-.quick-examples span { font-size: 14px; color: var(--text-gray); white-space: nowrap; }
-.quick-btn {
-  background: var(--primary-light); color: var(--primary-dark); border: 1px solid rgba(45,122,58,0.2);
-  padding: 8px 18px; border-radius: 22px; font-size: 14px; cursor: pointer;
-  transition: all 0.2s; font-family: inherit; white-space: nowrap; letter-spacing: 0.3px;
-}
-.quick-btn:hover { background: var(--primary); color: white; }
-
-.chat-messages {
-  background: #f8faf8; min-height: 380px; max-height: 480px; overflow-y: auto;
-  padding: 22px; display: flex; flex-direction: column; gap: 18px;
-}
-.chat-msg { display: flex; gap: 12px; animation: msgSlideIn 0.35s ease; }
-@keyframes msgSlideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-.chat-msg.ai { flex-direction: row; }
-.chat-msg.user { flex-direction: row-reverse; }
-.chat-avatar {
-  width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center; font-size: 19px;
-}
-.chat-msg.ai .chat-avatar { background: var(--primary-light); }
-.chat-msg.user .chat-avatar { background: var(--secondary-light); }
-.chat-bubble {
-  max-width: 82%; padding: 14px 20px; border-radius: 18px; font-size: 15px;
-  line-height: 1.8; word-break: break-word; letter-spacing: 0.3px;
-}
-.chat-msg.ai .chat-bubble {
-  background: white; border: 1px solid var(--gray-border);
-  border-top-left-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-}
-.chat-msg.user .chat-bubble {
-  background: var(--primary); color: white;
-  border-top-right-radius: 4px; box-shadow: 0 2px 6px rgba(45,122,58,0.2);
-}
-.chat-bubble p { margin: 0 0 8px 0; }
-.chat-bubble p:last-child { margin-bottom: 0; }
-.chat-bubble ul, .chat-bubble ol { margin: 8px 0; padding-left: 20px; }
-.chat-bubble li { margin-bottom: 6px; }
-.chat-bubble strong { color: var(--primary-dark); }
-.chat-msg.user .chat-bubble strong { color: #fff; }
-.chat-bubble .danger-tag {
-  display: inline-block; background: #fff0f0; color: #c0392b; padding: 3px 12px;
-  border-radius: 4px; font-weight: 600; font-size: 13px; margin-right: 6px;
-}
-.chat-bubble .safe-tag {
-  display: inline-block; background: var(--primary-light); color: var(--primary-dark);
-  padding: 3px 12px; border-radius: 4px; font-weight: 600; font-size: 13px; margin-right: 6px;
-}
-.typing-indicator { display: flex; align-items: center; gap: 6px; padding: 10px 16px; }
-.typing-indicator span {
-  width: 8px; height: 8px; border-radius: 50%; background: var(--text-gray);
-  animation: typeBounce 1.4s ease-in-out infinite;
-}
-.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes typeBounce { 0%,80%,100% { transform: scale(0.5); opacity: 0.3; } 40% { transform: scale(1); opacity: 1; } }
-
-.chat-input-area {
-  background: white; padding: 18px 22px; border-top: 1px solid var(--gray-border);
-  display: flex; gap: 12px; align-items: center;
-  border-radius: 0 0 var(--radius) var(--radius);
-}
-.chat-input-area input {
-  flex: 1; padding: 12px 18px; border: 1px solid var(--gray-border); border-radius: 24px;
-  font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; letter-spacing: 0.3px;
-}
-.chat-input-area input:focus { border-color: var(--primary); }
-.chat-send-btn {
-  width: 44px; height: 44px; border-radius: 50%; background: var(--primary); border: none;
-  color: white; font-size: 18px; cursor: pointer; transition: all 0.2s; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-}
-.chat-send-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
-.chat-send-btn:disabled { background: var(--gray-border); cursor: not-allowed; transform: none; }
-.chat-clear-btn {
-  background: none; border: 1px solid var(--gray-border); color: var(--text-gray);
-  padding: 8px 20px; border-radius: 22px; font-size: 13px; cursor: pointer;
-  transition: all 0.2s; font-family: inherit; margin-top: 12px; letter-spacing: 0.3px;
-}
-.chat-clear-btn:hover { background: #fee; border-color: #e88; color: #c0392b; }
-
-@media (max-width: 600px) {
-  .chat-messages { min-height: 280px; max-height: 360px; padding: 14px; }
-  .chat-bubble { max-width: 90%; font-size: 13px; }
+.disclaimer-footer-note {
+  background: #f5f5f5;
+  padding: 10px;
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  margin-top: 20px;
+  border-radius: 8px;
 }
 </style>
 </head>
@@ -1035,81 +1027,43 @@ body {
   </div>
   <div class="nav-links">
     <span class="nav-link active" onclick="showPage('home')">首页</span>
-    <span class="nav-link" onclick="showPage('home');setTimeout(()=>document.getElementById('chatInput').scrollIntoView({behavior:'smooth',block:'center'}),100)">💬 AI诊疗</span>
+    <span class="nav-link" onclick="showPage('constitution')">体质测评</span>
     <span class="nav-link" onclick="showPage('profile')">我的</span>
-    <a class="nav-link" href="/llm" style="background:rgba(255,255,255,0.15);color:white;">🧬 LLM版</a>
+    <a class="nav-link" href="/hunhe" style="background:rgba(255,255,255,0.15);color:white;">大众版</a>
   </div>
 </header>
 
 <div class="main-container">
   <aside class="sidebar"><div class="health-tip-card"><div class="health-tip-title">💡 养生小知识</div><div class="health-tip-content" id="healthTipContent"></div><button class="refresh-tip" onclick="refreshHealthTip()">换一换</button></div></aside>
   <div class="content">
+    <!-- 全局免责提示条（所有页面顶部显示） - 无本地存储记忆，刷新即恢复 -->
+    <div class="global-disclaimer" id="globalDisclaimer">
+      <span>⚠️</span>
+      <strong>辅助诊疗提示：</strong> 本系统所有内容（包括体质测评、方剂推荐、节气养生等）仅供参考，不能替代专业医师的诊断与治疗。如有身体不适，请及时就医。
+      <span class="close-disclaimer" onclick="closeGlobalDisclaimer()">✕</span>
+    </div>
+
     <div class="page active" id="pageHome">
       <div class="stats-grid"><div class="stat-card"><div class="stat-icon">📋</div><div><div class="stat-number" id="heroStatCount">-</div><div class="stat-label">医案数据</div></div></div><div class="stat-card"><div class="stat-icon">🌿</div><div><div class="stat-number" id="heroFormulaCount">-</div><div class="stat-label">方剂收录</div></div></div><div class="stat-card"><div class="stat-icon">🔍</div><div><div class="stat-number">智能</div><div class="stat-label">症状检索</div></div></div><div class="stat-card"><div class="stat-icon">💊</div><div><div class="stat-number">推荐</div><div class="stat-label">方剂建议</div></div></div></div>
       <div class="hot-search-section"><div class="hot-search-title">热门搜索</div><div class="hot-search-grid" id="hotSearchGrid"></div></div>
       <div id="smartJieqiRecommend"></div>
       <div class="calendar-table"><div class="calendar-title">二十四节气养生大全</div><div id="jieqiCalendar"></div></div>
-
-      <!-- AI智能诊疗（内嵌首页） -->
-      <div class="chat-container" style="margin-top:24px;">
-        <!-- 基础信息采集 -->
-        <div class="consult-card" id="chatInfoCard" style="margin-bottom:16px;">
-          <div class="consult-card-title" style="font-size:18px;">📋 基本信息（选填，帮助AI更精准分析）</div>
-          <div class="consult-form" style="gap:12px;">
-            <div class="form-row" style="gap:12px;">
-              <div class="form-group" style="min-width:100px;"><label style="font-size:14px;">姓名</label><input type="text" id="chatName" placeholder="选填" style="font-size:15px;padding:11px 15px;"></div>
-              <div class="form-group" style="min-width:100px;"><label style="font-size:14px;">性别</label><select id="chatGender" style="font-size:15px;padding:11px 15px;"><option value="">请选择</option><option value="男">男</option><option value="女">女</option></select></div>
-              <div class="form-group" style="min-width:90px;"><label style="font-size:14px;">年龄</label><input type="number" id="chatAge" placeholder="岁" min="1" max="120" style="font-size:15px;padding:11px 15px;"></div>
-              <div class="form-group" style="min-width:90px;"><label style="font-size:14px;">身高 cm</label><input type="number" id="chatHeight" placeholder="选填" min="50" max="250" style="font-size:15px;padding:11px 15px;"></div>
-              <div class="form-group" style="min-width:90px;"><label style="font-size:14px;">体重 kg</label><input type="number" id="chatWeight" placeholder="选填" min="20" max="300" style="font-size:15px;padding:11px 15px;"></div>
-            </div>
-            <div style="font-size:13px;color:var(--text-gray);margin-top:4px;">💡 填写基本信息后，AI将结合您的年龄、性别等进行更精准的分析</div>
-          </div>
-        </div>
-
-        <div class="chat-header-area" style="border-radius:var(--radius) var(--radius) 0 0;">
-          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-            <div>
-              <h2 style="margin-bottom:4px;font-size:20px;">💬 AI 智能诊疗</h2>
-              <p style="margin:0;font-size:14px;line-height:1.6;">无需 API Key，直接输入症状即可获得中医辨证分析与建议</p>
-            </div>
-            <button onclick="changeApiKey()" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);color:white;padding:7px 16px;border-radius:20px;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;">⚙️ 升级 LLM</button>
-          </div>
-        </div>
-        <div class="quick-examples" style="padding:16px 20px;">
-          <span style="font-size:14px;">⚡ 快速体验：</span>
-          <button class="quick-btn" onclick="sendQuickExample('头痛')" style="font-size:14px;padding:8px 18px;">头痛</button>
-          <button class="quick-btn" onclick="sendQuickExample('关节疼痛')" style="font-size:14px;padding:8px 18px;">关节疼痛</button>
-          <button class="quick-btn" onclick="sendQuickExample('失眠')" style="font-size:14px;padding:8px 18px;">失眠</button>
-          <button class="quick-btn" onclick="sendQuickExample('胃痛')" style="font-size:14px;padding:8px 18px;">胃痛</button>
-        </div>
-        <div class="chat-messages" id="chatMessages" style="min-height:360px;max-height:440px;padding:20px;gap:16px;font-size:15px;line-height:1.8;">
-          <div class="chat-msg ai">
-            <div class="chat-avatar">🌿</div>
-            <div class="chat-bubble" style="font-size:15px;line-height:1.8;">
-              <p>您好，我是<b>本草 AI 诊疗助手</b>。👋</p>
-              <p>请告诉我您的<b>主要症状</b>，我会：</p>
-              <p>🔴 先帮您<b>排查危险信号</b><br>🟢 进行<b>症状分型</b>分析<br>💡 给出<b>具体应对方案</b><br>⚠️ 提供<b>用药安全提示</b></p>
-              <p style="margin-top:10px;color:var(--text-gray);font-size:13px;">您可以点击上方快捷按钮，或直接在下方输入症状描述。</p>
-            </div>
-          </div>
-        </div>
-        <div class="chat-input-area" style="padding:16px 20px;gap:12px;">
-          <input type="text" id="chatInput" placeholder="描述您的症状，如：头痛三天、太阳穴附近搏动性痛……" onkeydown="if(event.key==='Enter')sendChatMessage()" style="font-size:15px;padding:12px 18px;">
-          <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMessage()" style="width:46px;height:46px;font-size:20px;">➤</button>
-        </div>
-        <div style="text-align:center;padding-bottom:12px;">
-          <button class="chat-clear-btn" onclick="clearChat()" style="font-size:13px;padding:8px 20px;">🗑 清空对话</button>
-        </div>
-      </div>
     </div>
     <div class="page" id="pageResults"><div class="results-header"><div><div style="font-size: 20px; font-weight: 700;" id="resultsQuery">搜索结果</div><div class="results-count" id="resultsCount">共 0 条结果</div></div><div><button class="back-button" onclick="goBackFromResults()">返回首页</button></div></div><div id="resultsList"></div></div>
     <div class="page" id="pageDetail"><div class="results-header"><div></div><div><button class="export-btn" onclick="exportCurrent()">导出</button><button class="back-button" onclick="goBackFromDetail()">返回</button></div></div><div id="detailContainer"></div></div>
     <div class="page" id="pageJieqiDetail"><div class="results-header"><div></div><button class="back-button" onclick="backToHome()">返回首页</button></div><div id="jieqiDetailContainer"></div></div>
-
+    
     <!-- 我的页面 -->
     <div class="page" id="pageProfile">
       <div class="profile-card">
+        <div class="profile-item" onclick="viewLastReport()">
+          <div class="profile-icon">📊</div>
+          <div class="profile-info">
+            <div class="profile-title">体质报告</div>
+            <div class="profile-desc">查看上次体质测评结果</div>
+          </div>
+          <div class="profile-arrow">›</div>
+        </div>
         <div class="profile-item" onclick="showFavorites()">
           <div class="profile-icon">❤️</div>
           <div class="profile-info">
@@ -1140,20 +1094,37 @@ body {
     <div class="page" id="pageFavorites"><div class="results-header"><div><div style="font-size:20px; font-weight:700;">我的收藏</div><div class="results-count" id="favoritesCount">共 0 条收藏</div></div><button class="back-button" onclick="goBackToProfile()">← 返回</button></div><div id="favoritesList" class="list-page"></div></div>
     <div class="page" id="pageHistory"><div class="results-header"><div><div style="font-size:20px; font-weight:700;">搜索历史</div><div class="results-count" id="historyCount">共 0 条记录</div></div><div><button class="back-button" onclick="clearHistory()">清空历史</button><button class="back-button" onclick="goBackToProfile()">← 返回</button></div></div><div id="historyList" class="list-page"></div></div>
     <div class="page" id="pageFeedback"><div class="results-header"><div><div style="font-size:20px; font-weight:700;">意见反馈</div><div class="results-count">我们非常重视你的意见</div></div><button class="back-button" onclick="goBackToProfile()">← 返回</button></div><div class="feedback-form"><textarea id="feedbackContent" class="feedback-textarea" placeholder="请告诉我们你的建议、意见或遇到的问题..."></textarea><button class="feedback-submit" onclick="submitFeedback()">提交反馈</button></div></div>
+
+    <!-- 九种体质测评页（保留原有的醒目提示，与全局提示互补） -->
+    <div class="page" id="pageConstitution">
+      <div class="constitution-card" id="quizPanel">
+        <div class="disclaimer-warning">
+          ⚠️ <strong>温馨提示：</strong> 本测评结果仅作为中医体质参考，不能替代专业医师的诊断与治疗。如有身体不适，请及时就医。
+        </div>
+        <div class="quiz-progress"><span class="progress-text" id="quizProgress">九种体质测评 · 共60题</span><button class="btn-secondary" onclick="resetQuiz()" style="padding:4px 12px;">重置全部</button></div>
+        <div id="quizQuestions"></div>
+        <div class="quiz-actions"><button class="btn-primary" onclick="submitQuiz()">提交测评 · 生成报告</button></div>
+      </div>
+      <div id="reportPanel" style="display:none;"></div>
+    </div>
   </div>
 </div>
 <footer class="footer">本草问诊 · 基于真实医案数据 · 内容仅供参考，不替代正规医疗诊断</footer>
 
 <script>
-// ======================== 二十四节气数据 ====================
-const JIEQI_BG_IMAGES = {
-  "立春": "images/lichun.jpg", "雨水": "images/yushui.jpg", "惊蛰": "images/jingzhe.jpg", "春分": "images/chunfen.jpg",
-  "清明": "images/qingming.jpg", "谷雨": "images/guyu.jpg", "立夏": "images/lixia.jpg", "小满": "images/xiaoman.jpg",
-  "芒种": "images/mangzhong.jpg", "夏至": "images/xiazhi.jpg", "小暑": "images/xiaoshu.jpg", "大暑": "images/dashu.jpg",
-  "立秋": "images/liqiu.jpg", "处暑": "images/chushu.jpg", "白露": "images/bailu.jpg", "秋分": "images/qiufen.jpg",
-  "寒露": "images/hanlu.jpg", "霜降": "images/shuangjiang.jpg", "立冬": "images/lidong.jpg", "小雪": "images/xiaoxue.jpg",
-  "大雪": "images/daxue.jpg", "冬至": "images/dongzhi.jpg", "小寒": "images/xiaohan.jpg", "大寒": "images/dahan.jpg"
-};
+// ======================== 全局免责条关闭功能（无本地存储，刷新即恢复） ========================
+function closeGlobalDisclaimer() {
+  const el = document.getElementById('globalDisclaimer');
+  if (el) el.style.display = 'none';
+}
+
+// ======================== 二十四节气数据（原有） ========================
+const JIEQI_BG_IMAGES = { "立春":"images/lichun.jpg", "雨水":"images/yushui.jpg", "惊蛰":"images/jingzhe.jpg", "春分":"images/chunfen.jpg",
+  "清明":"images/qingming.jpg", "谷雨":"images/guyu.jpg", "立夏":"images/lixia.jpg", "小满":"images/xiaoman.jpg",
+  "芒种":"images/mangzhong.jpg", "夏至":"images/xiazhi.jpg", "小暑":"images/xiaoshu.jpg", "大暑":"images/dashu.jpg",
+  "立秋":"images/liqiu.jpg", "处暑":"images/chushu.jpg", "白露":"images/bailu.jpg", "秋分":"images/qiufen.jpg",
+  "寒露":"images/hanlu.jpg", "霜降":"images/shuangjiang.jpg", "立冬":"images/lidong.jpg", "小雪":"images/xiaoxue.jpg",
+  "大雪":"images/daxue.jpg", "冬至":"images/dongzhi.jpg", "小寒":"images/xiaohan.jpg", "大寒":"images/dahan.jpg" };
 const JIEQI_BRIEF = { "立春":"立春阳气生，护肝升阳，韭菜豆芽助生发。","雨水":"雨水乍暖还寒，宜春捂防寒，多吃山药薏米。","惊蛰":"惊蛰春雷动，肝阳升发，吃梨润燥养正气。","春分":"春分阴阳平，调和肝脾，食甘少酸踏青怡情。","清明":"清明柔肝养肺，荠菜香椿正当时，避发物防过敏。","谷雨":"谷雨湿气渐重，健脾祛湿、疏肝清热。","立夏":"立夏养心护阳，午间小憩，食莲子百合。","小满":"小满健脾祛湿宜冬瓜薏米，忌贪凉饮冷。","芒种":"芒种清热解暑，绿豆荷叶消暑，午休养心。","夏至":"夏至养心宁神，冬病夏治，吃苦瓜莲子。","小暑":"小暑清热祛湿，冬瓜薏米汤，心静自然凉。","大暑":"大暑祛湿健脾，三豆汤度苦夏。","立秋":"立秋滋阴润肺，银耳雪梨润燥，少辛增酸。","处暑":"处暑润燥安神，莲藕蜂蜜润肺，解秋乏。","白露":"白露滋阴润肺，多吃梨芝麻，腹部保暖。","秋分":"秋分润肺平衡阴阳，百合银耳润燥登高。","寒露":"寒露养阴防燥，芝麻核桃润肺，足部保暖。","霜降":"霜降健脾养胃，山药栗子温补，忌生冷。","立冬":"立冬补肾藏精，羊肉核桃温阳，早卧晚起。","小雪":"小雪温补肾阳，黑豆红枣助阳，多晒太阳。","大雪":"大雪温阳固本，桂圆红枣茶暖身。","冬至":"冬至温补脾肾，饺子羊肉汤，静养潜藏。","小寒":"小寒温阳散寒，生姜羊肉暖中。","大寒":"大寒温补脾肾，糯米八宝饭补益。" };
 const JIEQI_DETAIL_MAP = {
   "立春": { principle:"护肝养阳，升发阳气", foods:["韭菜","豆芽","春笋","红枣"], recipe:"韭菜炒鸡蛋", warning:"忌食酸收之味", healthTips:"夜卧早起，广步于庭", details:"立春标志着春季开始，阳气初生。" },
@@ -1189,48 +1160,119 @@ function renderSmartRecommendation() { const next=getNextJieqi(); if(!next) retu
 function showJieqiDetail(name) { const detail=JIEQI_DETAIL_MAP[name]||JIEQI_DETAIL_MAP["立春"]; const exactDate=PRECISE_JIEQI_DATES[name]||""; document.getElementById('jieqiDetailContainer').innerHTML=`<div class="jieqi-detail"><div class="jieqi-header"><div class="jieqi-detail-name">${name}</div><div class="jieqi-detail-time">${exactDate}</div><div class="jieqi-detail-principle">养生原则：${detail.principle}</div></div><div class="jieqi-detail-body"><div class="jieqi-section"><div class="jieqi-section-title">节气详解</div><div class="detail-content">${detail.details||''}</div></div><div class="jieqi-section"><div class="jieqi-section-title">推荐食材</div><div>${detail.foods.map(f=>`<span class="foods-tag">${f}</span>`).join('')}</div></div><div class="jieqi-section"><div class="jieqi-section-title">推荐食谱</div><div class="recipe-box">${detail.recipe}</div></div><div class="jieqi-section"><div class="jieqi-section-title">注意事项</div><div class="warning-box">${detail.warning}</div></div><div class="jieqi-section"><div class="jieqi-section-title">养生小贴士</div><div class="detail-content">${detail.healthTips||''}</div></div></div></div>`; document.getElementById('pageJieqiDetail').classList.add('active'); document.getElementById('pageHome').classList.remove('active'); document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); document.querySelector('.nav-link').classList.add('active'); window.scrollTo({top:0}); }
 function renderJieqiCalendar() { const container=document.getElementById('jieqiCalendar'); const next=getNextJieqi(); const nextName=next?next.name:null; let html=''; for(let i=0;i<4;i++){ html+='<div class="jieqi-row">'; for(let j=0;j<6;j++){ const idx=i*6+j; if(idx<JIEQI_ORDER.length){ const name=JIEQI_ORDER[idx]; const dateInfo=PRECISE_JIEQI_DATES[name]||''; const isHighlight=(name===nextName); html+=`<div class="jieqi-cell ${isHighlight?'highlight':''}" onclick="showJieqiDetail('${name}')"><div class="jieqi-cell-name">${name}</div><div class="jieqi-cell-date">${dateInfo}</div></div>`; } } html+='</div>'; } container.innerHTML=html; }
 
-// 症状清洗函数
+// ======================== 增强版症状清洗：只保留核心症状 ========================
 function cleanSymptomsText(s) {
-  if(!s) return '';
+  if (!s) return '';
   let text = s;
-  // 1. 去掉元数据标签（保留后面的内容）
+
+  // ----- 第1步：优先截取“证型”之前的内容 -----
+  const zhengIndex = text.search(/证型[:：]/);
+  if (zhengIndex !== -1) {
+    text = text.substring(0, zhengIndex);
+  }
+
+  // ----- 第2步：去除心率、体温、血压等临床数据 -----
+  text = text.replace(/心率\s*[:：]\s*[\d\.]+/g, '');
+  text = text.replace(/体温\s*[:：]\s*[\d\.]+/g, '');
+  text = text.replace(/血压\s*[:：]\s*[\d\.]+/g, '');
+  text = text.replace(/低压\s*[:：]\s*[\d\.]+/g, '');
+  text = text.replace(/高压\s*[:：]\s*[\d\.]+/g, '');
+  text = text.replace(/脉率\s*[:：]\s*[\d\.]+/g, '');
+  text = text.replace(/呼吸\s*[:：]\s*[\d\.]+/g, '');
+  text = text.replace(/脉搏\s*[:：]\s*[\d\.]+/g, '');
+  text = text.replace(/血氧\s*[:：]\s*[\d\.]+/g, '');
+  text = text.replace(/血糖\s*[:：]\s*[\d\.]+/g, '');
+  text = text.replace(/[\d\.]+\s*(?:℃|度|°|次\/分|bpm|mmol\/L|mg\/dL|mmHg|cm|kg)/g, '');
+
+  // ----- 第3步：去除各种标签头 -----
   text = text.replace(/基本信息[:：]\s*/g, '');
   text = text.replace(/主诉[:：]\s*/g, '');
+  text = text.replace(/上次就诊内容[:：]\s*/g, '');
   text = text.replace(/现病史[:：]\s*/g, '');
   text = text.replace(/体格检查[:：]\s*/g, '');
-  text = text.replace(/上次就诊内容[:：]\s*/g, '');
-  // 2. 去掉年龄/性别/身高/体重数值
-  text = text.replace(/年龄[:：]?\s*\d+\s*岁?/g, '');
-  text = text.replace(/性别[:：]?\s*[男女]/g, '');
-  text = text.replace(/身高[:：]?\s*[\d.]+\s*(?:cm|厘米)?/g, '');
-  text = text.replace(/体重[:：]?\s*[\d.]+\s*(?:kg|千克)?/g, '');
-  // 3. 去掉治疗相关内容（证型、治法、方剂、中药+克数）
-  text = text.replace(/(?:证型|治法|方剂|中药|西医诊断)[:：]\s*\S+/g, '');
-  // 4. 去掉所有"中药名+数字"的药量写法（如 柴胡15.0、茯苓10.0）
-  text = text.replace(/[一-鿿]{1,6}\d+\.?\d*\s*/g, '');
-  // 6. 清理多余空格和标点
-  text = text.replace(/\s+/g, ' ').trim();
-  text = text.replace(/^[,，、.\s]+/, '').replace(/[,，、.\s]+$/, '');
-  // 7. 截断过长文本
-  if(text.length>400) text = text.substring(0,400)+'…';
-  return text || '（无详细症状描述）';
-}
-function cleanHerbName(herbStr) {
-  if(!herbStr) return [];
-  let herbs = herbStr.split(/\s+/);
-  let cleaned = [];
-  for(let h of herbs){
-    if(!h.trim()) continue;
-    let name = h.replace(/[\d\.]+(?:g|克|ml|毫升)?/g, '').trim();
-    name = name.replace(/[.,，。]$/, '');
-    if(name && name.length>0 && name.length<20 && !name.match(/^[0-9]+$/)) {
-      cleaned.push(name);
-    }
+  text = text.replace(/年龄[:：]\s*\d+\s*岁?/g, '');
+  text = text.replace(/年龄\s*\d+/g, '');
+  text = text.replace(/性别[:：]\s*[男女]/g, '');
+  text = text.replace(/身高[:：]\s*[\d\.]+\s*(?:cm|厘米)?/g, '');
+  text = text.replace(/身高\s*[\d\.]+/g, '');
+  text = text.replace(/体重[:：]\s*[\d\.]+\s*(?:kg|千克)?/g, '');
+  text = text.replace(/体重\s*[\d\.]+/g, '');
+
+  // ----- 第4步：去除舌诊、脉诊全部内容 -----
+  text = text.replace(/舌[^，,。；;]*/g, '');
+  text = text.replace(/脉[^，,。；;]*/g, '');
+
+  // ----- 第5步：去除证型、治法 -----
+  text = text.replace(/证型[:：]\s*[^，,。；;]*/g, '');
+  text = text.replace(/证型\s*[^，,。；;]*/g, '');
+  text = text.replace(/治法[:：]\s*[^，,。；;]*/g, '');
+  text = text.replace(/治法\s*[^，,。；;]*/g, '');
+
+  // ----- 第6步：去除中药及克数 -----
+  text = text.replace(/中药[:：][^，,。；;]*/g, '');
+  text = text.replace(/中草药[:：][^，,。；;]*/g, '');
+  text = text.replace(/[\u4e00-\u9fa5]+[\d\.]+(?:g|克|ml|毫升)?/g, '');
+  text = text.replace(/[\d\.]+(?:g|克|ml|毫升)/g, '');
+  text = text.replace(/[\d\.]+\s*[gG]/g, '');
+
+  // ----- 第7步：去除括号内内容（包括中文和英文括号） -----
+  text = text.replace(/\([^)]*\)/g, '');
+  text = text.replace(/（[^）]*）/g, '');
+  text = text.replace(/【[^】]*】/g, '');
+  text = text.replace(/[,，、]\s*[,，、]/g, '、');
+
+  // ----- 第8步：去除时间/频率/程度描述词 -----
+  const timeWords = [
+    '近期', '长期', '短期', '慢性', '急性', '亚急性', '持续', '间歇', '阵发',
+    '反复', '迁延', '频发', '偶发', '多发', '单发', '继发', '原发',
+    '既往', '数年', '数月', '数日', '多年', '多月', '多日',
+    '一般', '中度', '重度', '轻度', '严重', '轻微', '显著', '明显'
+  ];
+  for (let w of timeWords) {
+    text = text.replace(new RegExp(w, 'g'), '');
   }
-  return [...new Map(cleaned.map(h=>[h,h])).values()];
+
+  // ----- 第9步：定义停用词（非症状描述词） -----
+  const stopWords = [
+    '体型', '中等', '偏瘦', '偏胖', '面色', '唇色', '唇厚', '唇紫', '唇暗',
+    '单眼皮', '双眼皮', '舌苔', '舌质', '舌色', '舌干', '舌紫', '舌暗',
+    '舌红', '舌淡', '舌胖', '舌有齿痕', '脉', '弦', '滑', '数', '细', '沉', '浮', '迟', '结', '代',
+    '证型', '治法', '中药', '中草药', '方剂', '症状', '体征',
+    '正常', '异常', '明显', '不明显', '可见', '不可见',
+    '鼻塞', '鼻干'  // 如果不想保留鼻塞、鼻干可加在这里
+  ];
+  for (let sw of stopWords) {
+    text = text.replace(new RegExp(sw, 'g'), '');
+  }
+
+  // ----- 第10步：按中文逗号、顿号、空格分割 -----
+  const parts = text.split(/[，,、\s]+/).filter(p => p.trim().length > 0);
+
+  // ----- 第11步：过滤掉长度过短、纯数字、纯英文、无意义词 -----
+  const filtered = parts.filter(p => {
+    if (p.length < 2) return false;
+    if (/^[a-zA-Z]+$/.test(p)) return false;
+    if (/^[\d.]+$/.test(p)) return false;
+    const meaningless = ['的', '了', '是', '在', '和', '与', '或', '有', '无', '及', '等', '其', '之'];
+    if (meaningless.includes(p)) return false;
+    return true;
+  });
+
+  // ----- 第12步：去重并组合 -----
+  const unique = [...new Set(filtered)];
+  let result = unique.join('、');
+
+  // ----- 第13步：截断过长 -----
+  if (result.length > 200) result = result.substring(0, 200) + '…';
+
+  // ----- 第14步：如果结果为空，返回友好提示 -----
+  return result || '（无详细症状描述）';
 }
 
-let fullData=[], formulaDatabase={}, currentItem=null, currentMode=null, favorites=[], searchHistory=[];
+function cleanHerbName(herbStr) { if(!herbStr) return []; let herbs = herbStr.split(/\s+/); let cleaned = []; for(let h of herbs){ if(!h.trim()) continue; let name = h.replace(/[\d\.]+(?:g|克|ml|毫升)?/g, '').trim(); name = name.replace(/[.,，。]$/, ''); if(name && name.length>0 && name.length<20 && !name.match(/^[0-9]+$/)) cleaned.push(name); } return [...new Map(cleaned.map(h=>[h,h])).values()]; }
+
+// 原有全局变量
+let fullData=[], currentItem=null, currentMode=null, favorites=[], searchHistory=[];
 const HEALTH_TIPS=["晨起一杯温水助代谢。","春养肝夏养心，顺时调养。","睡前泡脚改善睡眠。","按揉足三里健脾益气。","药食同源，红枣枸杞补气血。"];
 let currentTipIndex=0;
 function refreshHealthTip(){ currentTipIndex=(currentTipIndex+1)%HEALTH_TIPS.length; document.getElementById('healthTipContent').innerHTML=HEALTH_TIPS[currentTipIndex]; }
@@ -1249,175 +1291,142 @@ function renderHistoryList(){ const c=document.getElementById('historyList'); do
 function clearHistory(){ if(confirm('清空历史?')){ searchHistory=[]; saveHistory(); renderHistoryList(); showToast('已清空'); } }
 function showFeedback(){ showPage('feedback'); }
 function submitFeedback(){ const content=document.getElementById('feedbackContent').value.trim(); if(!content){ showToast('请输入反馈'); return; } let fb=[]; const saved=localStorage.getItem('tcm_feedbacks'); if(saved) fb=JSON.parse(saved); fb.unshift({content,time:new Date().toLocaleString()}); localStorage.setItem('tcm_feedbacks',JSON.stringify(fb)); document.getElementById('feedbackContent').value=''; showToast('感谢反馈'); }
-async function loadData(){ initStorage(); try{ let resp=await fetch('/api/records_count'); let stats=await resp.json(); document.getElementById('heroStatCount').innerHTML=(stats.total_records||0).toLocaleString(); document.getElementById('heroFormulaCount').innerHTML='智能'; window.suggestionFormulas=[“归脾汤”,”桂枝汤”,”六味地黄丸”,”小柴胡汤”,”四君子汤”,”逍遥散”]; document.getElementById('hotSearchGrid').innerHTML=[“归脾汤”,”桂枝汤”,”六味地黄丸”,”失眠”,”咳嗽”,”胃痛”].map(t=>`<button class=”hot-search-item” onclick=”doSearch('${t}')”>${t}</button>`).join(''); }catch(e){ document.getElementById('heroStatCount').innerHTML='-'; document.getElementById('heroFormulaCount').innerHTML='-'; } refreshHealthTip(); renderJieqiCalendar(); renderSmartRecommendation(); }
-async function doSearch(q){ if(!q.trim()) return; addToHistory(q); try{ let resp=await fetch('/api/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q,max_results:20})}); let data=await resp.json(); let res=data.results||[]; document.getElementById('resultsQuery').innerHTML=`”${q}” 检索结果`; document.getElementById('resultsCount').innerHTML=`共 ${res.length} 条`; let c=document.getElementById('resultsList'); if(!res.length) c.innerHTML='<div class=”empty-state”>无结果</div>'; else c.innerHTML=res.map((item,idx)=>`<div class=”result-card” onclick=”showCaseDetail(${idx})”><div class=”result-name”>${item.diagnosis?.replace(/^证型[:：]/,'')||'医案'}</div><div class=”result-type”>方剂：${item.formula?.split(/[\s,，、]/)[0]||''}</div><button class=”export-btn” style=”margin-top:8px;padding:5px 14px;font-size:12px;” onclick=”event.stopPropagation();addToFavorite(item,'case','${item.diagnosis?.replace(/^证型[:：]/,'')||'医案'}')”>❤ 收藏</button></div>`).join(''); window.currentCases=res; showPage('results'); }catch(e){ document.getElementById('resultsList').innerHTML='<div class=”empty-state”>搜索服务暂不可用，请稍后重试</div>'; showPage('results'); } }
-async function showFormulaDetail(f){ let favFlag=isFavorited(f.name); try{ let resp=await fetch('/api/formula',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name})}); let data=await resp.json(); if(data.found){ let herbs=cleanHerbName(data.herbs||''); let herbsHtml=herbs.length?`<div class=”formula-section”><div class=”formula-section-title”>方剂组成</div><div class=”herb-grid”>${herbs.map(h=>`<span class=”herb-item”>${h}</span>`).join('')}</div></div>`:''; let effectHtml=data.diagnosis&&data.diagnosis!=='null'?`<div class=”formula-section”><div class=”formula-section-title”>功效参考</div><div class=”effect-text”>${data.diagnosis.replace(/^证型[:：]/,'')}</div></div>`:''; document.getElementById('detailContainer').innerHTML=`<div class=”formula-detail-card”><div class=”formula-header”><div class=”formula-name”>${f.name}</div></div><div class=”formula-body”>${herbsHtml}${effectHtml}<div style=”text-align:center; margin-top:24px;”><button class=”export-btn” onclick=”toggleFavoriteFormula('${f.name}')”>${favFlag?'❤ 已收藏':'☆ 收藏'}</button></div></div></div>`; }else{ document.getElementById('detailContainer').innerHTML=`<div class=”formula-detail-card”><div class=”formula-header”><div class=”formula-name”>${f.name}</div></div><div class=”formula-body”><div class=”case-text”>该方剂暂无详细数据</div><div style=”text-align:center; margin-top:24px;”><button class=”export-btn” onclick=”toggleFavoriteFormula('${f.name}')”>${favFlag?'❤ 已收藏':'☆ 收藏'}</button></div></div></div>`; } }catch(e){ document.getElementById('detailContainer').innerHTML=`<div class=”formula-detail-card”><div class=”formula-header”><div class=”formula-name”>${f.name}</div></div><div class=”formula-body”><div class=”case-text”>数据加载失败</div></div></div>`; } showPage('detail'); }
+// buildFormulaDatabase removed - using backend API
+async function loadData(){ initStorage(); try{ let resp=await fetch('/api/records_count'); let stats=await resp.json(); let total=(stats.total_records||0); document.getElementById('heroStatCount').innerHTML=total.toLocaleString(); document.getElementById('heroFormulaCount').innerHTML='31万+'; }catch(e){ document.getElementById('heroStatCount').innerHTML='31万+'; document.getElementById('heroFormulaCount').innerHTML='31万+'; } window.suggestionFormulas=["归脾汤","桂枝汤","六味地黄丸","小柴胡汤","四君子汤","逍遥散"]; document.getElementById('hotSearchGrid').innerHTML=["归脾汤","桂枝汤","六味地黄丸","失眠","咳嗽","胃痛"].map(t=>`<button class="hot-search-item" onclick="doSearch('${t}')">${t}</button>`).join(''); refreshHealthTip(); renderJieqiCalendar(); renderSmartRecommendation(); }
+async function doSearch(q){ if(!q.trim()) return; addToHistory(q); try{ let resp=await fetch('/api/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q,max_results:20})}); let data=await resp.json(); let res=data.results||[]; document.getElementById('resultsQuery').innerHTML='"'+q+'" \u68c0\u7d22\u7ed3\u679c'; document.getElementById('resultsCount').innerHTML='\u5171 '+res.length+' \u6761'; let c=document.getElementById('resultsList'); if(!res.length) c.innerHTML='<div class="empty-state">\u65e0\u7ed3\u679c</div>'; else c.innerHTML=res.map((item,idx)=>{ let diag=(item.diagnosis||'').replace(/^\u8bc1\u578b[:\uff1a]/,'')||'\u533b\u6848'; let fn=(item.formula||'').split(/[\s,\uff0c\u3001]/)[0]||''; return '<div class="result-card" onclick="showCaseDetail('+idx+')"><div class="result-name">'+diag+'</div><div class="result-type">\u65b9\u5242\uff1a'+fn+'</div><button class="export-btn" style="margin-top:8px;padding:5px 14px;font-size:12px;" onclick="event.stopPropagation();addToFavorite(item,\'case\',\''+diag+'\')">\u2764 \u6536\u85cf</button></div>'; }).join(''); window.currentCases=res; showPage('results'); }catch(e){ document.getElementById('resultsList').innerHTML='<div class="empty-state">\u641c\u7d22\u670d\u52a1\u6682\u4e0d\u53ef\u7528\uff0c\u8bf7\u7a0d\u540e\u91cd\u8bd5</div>'; showPage('results'); } }
+async function showFormulaDetail(f){ let favFlag=isFavorited(f.name); try{ let resp=await fetch('/api/formula',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:f.name})}); let data=await resp.json(); let herbsHtml=''; if(data.found){ let herbs=cleanHerbName(data.herbs||''); herbsHtml=herbs.length?'<div class="formula-section"><div class="formula-section-title">方剂组成</div><div class="herb-grid">'+herbs.map(h=>'<span class="herb-item">'+h+'</span>').join('')+'</div></div>':''; let effectHtml=data.diagnosis&&data.diagnosis!=='null'?'<div class="formula-section"><div class="formula-section-title">功效参考</div><div class="effect-text">'+data.diagnosis.replace(/^证型[:：]/,'')+'</div></div>':''; document.getElementById('detailContainer').innerHTML='<div class="formula-detail-card"><div class="formula-header"><div class="formula-name">'+f.name+'</div></div><div class="formula-body">'+herbsHtml+effectHtml+'<div style="text-align:center; margin-top:24px;"><button class="export-btn" onclick="toggleFavoriteFormula(\''+f.name+'\')">'+(favFlag?'❤ 已收藏':'☆ 收藏')+'</button></div></div></div>'; }else{ document.getElementById('detailContainer').innerHTML='<div class="formula-detail-card"><div class="formula-header"><div class="formula-name">'+f.name+'</div></div><div class="formula-body"><div class="case-text">该方剂暂无详细数据</div><div style="text-align:center; margin-top:24px;"><button class="export-btn" onclick="toggleFavoriteFormula(\''+f.name+'\')">'+(favFlag?'❤ 已收藏':'☆ 收藏')+'</button></div></div></div>'; } }catch(e){ document.getElementById('detailContainer').innerHTML='<div class="formula-detail-card"><div class="formula-header"><div class="formula-name">'+f.name+'</div></div><div class="formula-body"><div class="case-text">数据加载失败</div></div></div>'; } showPage('detail'); }
 function toggleFavoriteFormula(name){ if(isFavorited(name)) removeFromFavorite(name); else addToFavorite({},'formula',name); if(currentItem?.name===name) showFormulaDetail(currentItem); }
 function showCaseDetail(idx){ let item=window.currentCases[idx]; currentItem=item; currentMode='case'; let diag=item.diagnosis?.replace(/^证型[:：]/,'')||''; let fn=item.formula?.split(/[\s,，、]/)[0]||''; let itemName=diag||fn||'医案'; let cleaned=cleanHerbName(item.herbs||''); let symp=cleanSymptomsText(item.symptoms||''); let html=`<div class="case-detail-card"><div class="case-header"><div class="case-title">病情分析</div></div><div class="case-body">${diag?`<div class="case-section"><div class="case-section-title">证型诊断</div><div class="case-text">${diag}</div></div>`:''}${fn?`<div class="case-section"><div class="case-section-title">推荐方剂</div><div class="case-text">${fn}</div></div>`:''}${cleaned.length?`<div class="case-section"><div class="case-section-title">中药组成</div><div class="herb-grid">${cleaned.map(h=>`<span class="herb-item">${h}</span>`).join('')}</div></div>`:''}${symp?`<div class="case-section"><div class="case-section-title">症状表现</div><div class="symptoms-text">${symp}</div></div>`:''}<div style="text-align:center; margin-top:24px;"><button class="export-btn" onclick="toggleFavoriteCase('${itemName}')">${isFavorited(itemName)?'❤ 已收藏':'☆ 收藏'}</button></div></div></div>`; document.getElementById('detailContainer').innerHTML=html; showPage('detail'); }
 function showCaseDetailFromItem(item){ let diag=item.diagnosis?.replace(/^证型[:：]/,'')||''; let fn=item.formula?.split(/[\s,，、]/)[0]||''; let itemName=diag||fn||'医案'; let cleaned=cleanHerbName(item.herbs||''); let symp=cleanSymptomsText(item.symptoms||''); let html=`<div class="case-detail-card"><div class="case-header"><div class="case-title">病情分析</div></div><div class="case-body">${diag?`<div class="case-section"><div class="case-section-title">证型诊断</div><div class="case-text">${diag}</div></div>`:''}${fn?`<div class="case-section"><div class="case-section-title">推荐方剂</div><div class="case-text">${fn}</div></div>`:''}${cleaned.length?`<div class="case-section"><div class="case-section-title">中药组成</div><div class="herb-grid">${cleaned.map(h=>`<span class="herb-item">${h}</span>`).join('')}</div></div>`:''}${symp?`<div class="case-section"><div class="case-section-title">症状表现</div><div class="symptoms-text">${symp}</div></div>`:''}<div style="text-align:center; margin-top:24px;"><button class="export-btn" onclick="toggleFavoriteCase('${itemName}')">${isFavorited(itemName)?'❤ 已收藏':'☆ 收藏'}</button></div></div></div>`; document.getElementById('detailContainer').innerHTML=html; showPage('detail'); }
 function toggleFavoriteCase(name){ if(isFavorited(name)) removeFromFavorite(name); else addToFavorite(currentItem,'case',name); if(currentMode==='case') showCaseDetailFromItem(currentItem); }
 function exportCurrent(){ let text=''; if(currentMode==='formula') text=`方剂：${currentItem.name}\n组成：${currentItem.herbs?.join('、')||''}`; else text=`证型：${currentItem.diagnosis}\n方剂：${currentItem.formula}\n症状：${cleanSymptomsText(currentItem.symptoms)}`; navigator.clipboard.writeText(text); showToast('已复制'); }
 function showToast(msg){ let t=document.createElement('div'); t.className='toast'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2000); }
-function showPage(page){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); if(page==='aiChat') page='home'; const pageId = `page${page.charAt(0).toUpperCase()+page.slice(1)}`; const pageEl = document.getElementById(pageId); if(pageEl) pageEl.classList.add('active'); document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); if(page==='home') document.querySelector('.nav-link').classList.add('active'); else if(page==='profile') document.querySelectorAll('.nav-link')[2].classList.add('active'); window.scrollTo({top:0}); }
+function showPage(page){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(`page${page.charAt(0).toUpperCase()+page.slice(1)}`).classList.add('active'); if(page==='home') document.querySelector('.nav-link').classList.add('active'); else if(page==='constitution') document.querySelectorAll('.nav-link')[1].classList.add('active'); else if(page==='profile') document.querySelectorAll('.nav-link')[2].classList.add('active'); window.scrollTo({top:0}); }
 function goBackFromResults(){ showPage('home'); }
 function goBackFromDetail(){ showPage(currentMode==='formula'?'home':'results'); }
 function goBackToProfile(){ showPage('profile'); }
 function backToHome(){ showPage('home'); }
 function onSearchInput(v){ const sugDiv=document.getElementById('searchSuggestions'); if(!v.trim()){ sugDiv.classList.remove('show'); return; } const filtered=(window.suggestionFormulas||[]).filter(s=>s.includes(v)).slice(0,6); if(filtered.length){ sugDiv.innerHTML=filtered.map(s=>`<div class="suggestion-item" onclick="doSearch('${s}')">${s}</div>`).join(''); sugDiv.classList.add('show'); } else sugDiv.classList.remove('show'); }
-// ======================== AI聊天诊疗逻辑 ========================
-const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
-const DEEPSEEK_MODEL = 'deepseek-chat';
-let chatApiKey = localStorage.getItem('tcm_chat_api_key') || '';
-let chatHistory = [];  // 存储对话历史
-let isWaitingReply = false;
 
-// 系统提示词
-const SYSTEM_PROMPT = '你是一位资深、温和、专业的中医诊疗AI助手。请严格按以下规则与患者对话：\n\n【格式要求】\n- 回复中绝对禁止出现任何星号字符（*），一个都不能有\n- 禁止使用任何Markdown格式标记\n- 小标题使用中文方括号【标题】格式\n- 语气温和有共情，分析专业\n- 使用中医术语时必须通俗解释\n- 回复300-600字，层次分明';
+// ======================== 九种体质测评核心模块 ========================
+const CONSTITUTION_TYPES = ["平和质","气虚质","阳虚质","阴虚质","痰湿质","湿热质","血瘀质","气郁质","特禀质"];
+const QUESTION_SET = [
+  { text: "您精力充沛，不易疲劳吗？", type: 0, positive: true },{ text: "您容易气短(呼吸短促，接不上气)吗？", type: 1, positive: false },
+  { text: "您手脚发凉吗？", type: 2, positive: false },{ text: "您感到手脚心发热吗？", type: 3, positive: false },
+  { text: "您感到胸闷或腹部胀满吗？", type: 4, positive: false },{ text: "您面部或鼻部有油腻感吗？", type: 5, positive: false },
+  { text: "您的面色或口唇颜色偏暗吗？", type: 6, positive: false },{ text: "您容易情绪低落或感到郁闷吗？", type: 7, positive: false },
+  { text: "您容易过敏(对药物、食物、花粉)吗？", type: 8, positive: false },{ text: "您容易感冒或生病吗？", type: 1, positive: false },
+  { text: "您比一般人怕冷吗？", type: 2, positive: false },{ text: "您感到口干咽燥、总想喝水吗？", type: 3, positive: false },
+  { text: "您形体肥胖、腹部肥满松软吗？", type: 4, positive: false },{ text: "您容易生痤疮或疮疖吗？", type: 5, positive: false },
+  { text: "您身体有固定部位疼痛吗？", type: 6, positive: false },{ text: "您常常心烦不安吗？", type: 7, positive: false },
+  { text: "您皮肤一抓就红、出现抓痕吗？", type: 8, positive: false },{ text: "您说话声音低弱无力吗？", type: 1, positive: false },
+  { text: "您吃凉的东西会感到不舒服吗？", type: 2, positive: false },{ text: "您感到眼睛干涩吗？", type: 3, positive: false },
+  { text: "您总觉得身体沉重、不爽快吗？", type: 4, positive: false },{ text: "您口苦或嘴里有异味吗？", type: 5, positive: false },
+  { text: "您皮肤粗糙或出现瘀斑吗？", type: 6, positive: false },{ text: "您咽喉部有异物感吗？", type: 7, positive: false },
+  { text: "您打喷嚏、鼻塞、流鼻涕容易反复吗？", type: 8, positive: false },{ text: "您容易心慌心跳吗？", type: 1, positive: false },
+  { text: "您腰部膝部怕冷吗？", type: 2, positive: false },{ text: "您容易失眠多梦吗？", type: 3, positive: false },
+  { text: "您嘴里黏腻或甜腻吗？", type: 4, positive: false },{ text: "您容易大便黏滞不畅吗？", type: 5, positive: false },
+  { text: "您记忆力下降或注意力不集中吗？", type: 6, positive: false },{ text: "您容易受惊吓吗？", type: 7, positive: false },
+  { text: "您吃海鲜或特定食物后起疹子吗？", type: 8, positive: false },{ text: "您容易出虚汗吗？", type: 1, positive: false },
+  { text: "您不喜欢冬天、喜欢夏天吗？", type: 2, positive: false },{ text: "您感到颧部潮红吗？", type: 3, positive: false },
+  { text: "您咳痰量多黏腻吗？", type: 4, positive: false },{ text: "您小便色黄、量少吗？", type: 5, positive: false },
+  { text: "您唇色紫暗吗？", type: 6, positive: false },{ text: "您常叹气或胸胁胀痛吗？", type: 7, positive: false },
+  { text: "您皮肤容易起荨麻疹吗？", type: 8, positive: false },{ text: "您适应季节变化能力差吗？", type: 1, positive: false },
+  { text: "您吃了生冷容易腹泻吗？", type: 2, positive: false },{ text: "您感到腰膝酸软吗？", type: 3, positive: false },
+  { text: "您有脂肪肝或高血脂倾向吗？", type: 4, positive: false },{ text: "您容易长湿疹吗？", type: 5, positive: false },
+  { text: "您月经有血块或痛经吗？", type: 6, positive: false },{ text: "您对精神刺激适应力差吗？", type: 7, positive: false },
+  { text: "您有过敏性鼻炎病史吗？", type: 8, positive: false },{ text: "您平时容易出汗、稍动更甚？", type: 1, positive: false },
+  { text: "您后背发凉感明显吗？", type: 2, positive: false },{ text: "您头发或皮肤干燥吗？", type: 3, positive: false },
+  { text: "您感觉喉咙总有痰吗？", type: 4, positive: false },{ text: "您容易感到身体发热且烦躁？", type: 5, positive: false },
+  { text: "您眼睛或脸部有红血丝且暗？", type: 6, positive: false },{ text: "您感觉生活压力大、爱胡思乱想？", type: 7, positive: false },
+  { text: "您接触花粉后打喷嚏流泪？", type: 8, positive: false },{ text: "您不喜欢运动、容易疲惫？", type: 1, positive: false },
+  { text: "您冬天睡觉脚不易暖热？", type: 2, positive: false },{ text: "您喜欢冷饮凉食吗？", type: 3, positive: false }
+];
+const RECIPE_MAP = {
+  "平和质": { diet: "均衡饮食，顺应四季", recipes: ["山药红枣粥", "清蒸鲈鱼", "五谷杂粮饭"], advice: "保持良好生活习惯，适度运动" },
+  "气虚质": { diet: "益气健脾，食宜粳米、山药、大枣", recipes: ["黄芪党参炖鸡汤", "山药薏米粥", "红枣桂圆茶"], advice: "避免过劳，运动宜柔缓" },
+  "阳虚质": { diet: "温补阳气，食宜羊肉、韭菜、生姜", recipes: ["当归生姜羊肉汤", "韭菜炒核桃", "姜枣茶"], advice: "注意保暖，多晒太阳" },
+  "阴虚质": { diet: "滋阴润燥，食宜百合、银耳、枸杞", recipes: ["银耳莲子羹", "百合雪梨汤", "黑芝麻糊"], advice: "避免熬夜，忌辛辣燥热" },
+  "痰湿质": { diet: "健脾祛湿，食宜薏米、赤小豆、冬瓜", recipes: ["薏米赤小豆粥", "冬瓜海带汤", "陈皮荷叶茶"], advice: "多运动，少食肥甘厚味" },
+  "湿热质": { diet: "清热利湿，食宜绿豆、苦瓜、芹菜", recipes: ["绿豆薏米汤", "凉拌苦瓜", "冬瓜薏米排骨汤"], advice: "忌烟酒辛辣，居住干燥" },
+  "血瘀质": { diet: "活血化瘀，食宜山楂、黑木耳、玫瑰花", recipes: ["山楂红糖水", "黑木耳炒山药", "玫瑰花茶"], advice: "保持心情舒畅，适当拉伸" },
+  "气郁质": { diet: "疏肝理气，食宜佛手、陈皮、薄荷", recipes: ["玫瑰佛手茶", "陈皮粥", "金橘柠檬饮"], advice: "多倾诉，增加社交活动" },
+  "特禀质": { diet: "益气固表，食宜黄芪、乌梅、灵芝", recipes: ["黄芪红枣茶", "灵芝煲瘦肉", "乌梅三豆饮"], advice: "避开过敏原，增强卫气" }
+};
+let userAnswers = new Array(QUESTION_SET.length).fill(null);
+let lastReport = null;
 
-function ensureApiKey(){
-  if(!chatApiKey){
-    const key=prompt('请输入DeepSeek API Key（在 platform.deepseek.com 获取）：\n\nAPI Key将以加密方式保存在浏览器本地存储中，不会上传到任何服务器。');
-    if(key && key.trim()){
-      chatApiKey=key.trim();
-      localStorage.setItem('tcm_chat_api_key',chatApiKey);
-      showToast('✅ API Key已保存');
-    }
+function renderQuiz() {
+  const container = document.getElementById('quizQuestions');
+  let html = '';
+  QUESTION_SET.forEach((q, idx) => {
+    let selected = userAnswers[idx] !== null ? userAnswers[idx] : '';
+    html += `<div class="question-item"><div class="question-text">${idx+1}. ${q.text}</div><div class="options">${[1,2,3,4,5].map(score => `<label class="option-label"><input type="radio" name="q${idx}" value="${score}" ${selected == score ? 'checked' : ''} onchange="setAnswer(${idx}, ${score})">${score===1?'没有/很少':score===2?'偶尔':score===3?'有时':score===4?'经常':score===5?'总是' : ''}</label>`).join('')}</div></div>`;
+  });
+  container.innerHTML = html;
+  document.getElementById('quizProgress').innerHTML = `九种体质测评 · 已完成 ${userAnswers.filter(a=>a!==null).length}/${QUESTION_SET.length} 题`;
+}
+window.setAnswer = (idx, score) => { userAnswers[idx] = score; renderQuiz(); };
+function resetQuiz() { userAnswers.fill(null); renderQuiz(); document.getElementById('reportPanel').style.display = 'none'; document.getElementById('quizPanel').style.display = 'block'; }
+function computeConstitution() {
+  let scores = [0,0,0,0,0,0,0,0,0];
+  let counts = [0,0,0,0,0,0,0,0,0];
+  for (let i=0; i<QUESTION_SET.length; i++) {
+    let q = QUESTION_SET[i];
+    let ans = userAnswers[i];
+    if (ans === null) continue;
+    let score = q.positive ? ans : (6 - ans);
+    scores[q.type] += score;
+    counts[q.type]++;
   }
-  return !!chatApiKey;
+  let resultScores = scores.map((s,idx) => counts[idx] ? (s / (counts[idx]*5)) * 100 : 0);
+  let maxIdx = 0;
+  for (let i=1;i<9;i++) if(resultScores[i] > resultScores[maxIdx]) maxIdx = i;
+  if (resultScores[0] > 65 && resultScores.slice(1).every(s => s < 45)) maxIdx = 0;
+  return { type: CONSTITUTION_TYPES[maxIdx], scores: resultScores };
 }
-
-function changeApiKey(){
-  const currentKey=chatApiKey?'当前已设置Key: '+chatApiKey.slice(0,6)+'...'+chatApiKey.slice(-4):'当前未设置API Key';
-  const key=prompt(currentKey+'\n\n请输入新的DeepSeek API Key（留空则清除）：\n\n获取地址：platform.deepseek.com → API Keys');
-  if(key===null) return;  // 取消
-  if(key.trim()){
-    chatApiKey=key.trim();
-    localStorage.setItem('tcm_chat_api_key',chatApiKey);
-    showToast('✅ API Key已更新');
-  } else {
-    chatApiKey='';
-    localStorage.removeItem('tcm_chat_api_key');
-    showToast('🗑 API Key已清除');
-  }
+function submitQuiz() {
+  let unanswered = userAnswers.filter(a => a === null).length;
+  if (unanswered > 0) { showToast(`还剩 ${unanswered} 题未答，请完成所有题目`); return; }
+  const result = computeConstitution();
+  const typeName = result.type;
+  const data = RECIPE_MAP[typeName];
+  const report = {
+    date: new Date().toLocaleString(),
+    constitution: typeName,
+    scores: result.scores,
+    diet: data.diet,
+    recipes: data.recipes,
+    advice: data.advice
+  };
+  localStorage.setItem('constitutionReport', JSON.stringify(report));
+  lastReport = report;
+  displayReport(report);
+  showToast(`测评完成！您的体质类型：${typeName}`);
 }
-
-function renderWelcomeMessage(){
-  chatHistory=[];
-  document.getElementById('chatMessages').innerHTML=`
-    <div class="chat-msg ai">
-      <div class="chat-avatar">🌿</div>
-      <div class="chat-bubble">
-        <p>您好，我是<b>本草AI诊疗助手</b>。👋</p>
-        <p>请告诉我您的<b>主要症状</b>，我会：</p>
-        <p>🔴 先帮您<b>排查危险信号</b><br>🟢 进行<b>症状分型</b>分析<br>💡 给出<b>具体应对方案</b><br>⚠️ 提供<b>用药安全提示</b></p>
-        <p style="margin-top:8px;color:var(--text-gray);font-size:13px;">您可以点击上方快捷按钮，或直接输入症状描述。</p>
-      </div>
-    </div>`;
+function displayReport(report) {
+  const reportHtml = `<div class="report-card"><span class="constitution-badge">🌱 您的体质类型：${report.constitution}</span><div class="report-section"><strong>📊 体质倾向分析</strong><br>${CONSTITUTION_TYPES.map((t,idx) => `<div class="score-bar"><span>${t}</span> <progress value="${report.scores[idx]}" max="100" style="width:60%;"></progress> ${Math.round(report.scores[idx])}分</div>`).join('')}</div><div class="report-section"><strong>🥗 饮食原则</strong><br>${report.diet}<div class="recipe-list">${report.recipes.map(r => `<div class="recipe-item">🍲 ${r}</div>`).join('')}</div></div><div class="report-section"><strong>💆 养生建议</strong><br>${report.advice}</div><div class="disclaimer-footer-note">📢 本报告仅供健康参考，具体诊疗请前往正规医疗机构。</div><button class="export-btn" onclick="exportReport()">📄 导出报告</button><button class="btn-secondary" style="margin-left:12px;" onclick="resetQuiz()">重新测评</button></div>`;
+  document.getElementById('reportPanel').innerHTML = reportHtml;
+  document.getElementById('reportPanel').style.display = 'block';
+  document.getElementById('quizPanel').style.display = 'none';
 }
-
-function addMessage(role, content){
-  const msgs=document.getElementById('chatMessages');
-  const avatarIcon=role==='ai'?'🌿':'👤';
-  const cls=role==='ai'?'ai':'user';
-  // 后处理：移除所有星号，格式化【标题】
-  let cleaned=content.replace(/\*\*/g,'').replace(/\*/g,'');
-  cleaned=cleaned.replace(/【([^】]+)】/g, '<span style="font-size:1.15em;font-weight:700;">【$1】</span>');
-  let html=cleaned.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-  msgs.innerHTML+='<div class="chat-msg '+cls+'"><div class="chat-avatar">'+avatarIcon+'</div><div class="chat-bubble">'+html+'</div></div>';
-  msgs.scrollTop=msgs.scrollHeight;
-}"><div class="chat-avatar">${avatarIcon}</div><div class="chat-bubble">${html}</div></div>`;
-  msgs.scrollTop=msgs.scrollHeight;
+function exportReport() {
+  if (!lastReport) { const cached = localStorage.getItem('constitutionReport'); if(cached) lastReport = JSON.parse(cached); else { showToast('无报告可导出'); return; } }
+  let text = `【本草问诊 · 中医体质报告】\n测评时间：${lastReport.date}\n体质类型：${lastReport.constitution}\n\n饮食原则：${lastReport.diet}\n推荐食谱：${lastReport.recipes.join('、')}\n养生建议：${lastReport.advice}\n\n(本报告仅供参考，不替代正规医疗诊断)`;
+  navigator.clipboard.writeText(text);
+  showToast('报告已复制到剪贴板');
 }
-
-function addTypingIndicator(){
-  const msgs=document.getElementById('chatMessages');
-  msgs.innerHTML+=`<div class="chat-msg ai" id="typingMsg"><div class="chat-avatar">🌿</div><div class="chat-bubble"><div class="typing-indicator"><span></span><span></span><span></span></div></div></div>`;
-  msgs.scrollTop=msgs.scrollHeight;
+function viewLastReport() {
+  const cached = localStorage.getItem('constitutionReport');
+  if (!cached) { showToast('暂无历史测评记录，请先进行体质测评'); return; }
+  lastReport = JSON.parse(cached);
+  displayReport(lastReport);
+  showPage('constitution');
+  document.getElementById('reportPanel').style.display = 'block';
+  document.getElementById('quizPanel').style.display = 'none';
 }
-
-function removeTypingIndicator(){
-  const typing=document.getElementById('typingMsg');
-  if(typing) typing.remove();
-}
-
-async function sendChatMessage(msgOverride){
-  if(isWaitingReply) return;
-  const input=document.getElementById('chatInput');
-  const userMsg=(msgOverride||input.value).trim();
-  if(!userMsg) return;
-
-  isWaitingReply=true;
-  document.getElementById('chatSendBtn').disabled=true;
-  if(!msgOverride) input.value='';
-
-  // 收集基础信息（首次对话时自动附上）
-  let fullMsg=userMsg;
-  if(chatHistory.length===0){
-    const name=document.getElementById('chatName').value.trim();
-    const gender=document.getElementById('chatGender').value;
-    const age=document.getElementById('chatAge').value.trim();
-    const height=document.getElementById('chatHeight').value.trim();
-    const weight=document.getElementById('chatWeight').value.trim();
-    let infoParts=[];
-    if(gender) infoParts.push('性别：'+gender);
-    if(age) infoParts.push('年龄：'+age+'岁');
-    if(height) infoParts.push('身高：'+height+'cm');
-    if(weight) infoParts.push('体重：'+weight+'kg');
-    if(infoParts.length>0){
-      fullMsg='【患者基本信息】'+infoParts.join('，')+'\n\n【主诉】'+userMsg;
-    }
-  }
-
-  addMessage('user',userMsg);
-  chatHistory.push({role:'user',content:fullMsg});
-  addTypingIndicator();
-
-  try{
-    const messages=[
-      {role:'system',content:SYSTEM_PROMPT},
-      ...chatHistory.slice(-10)
-    ];
-    const API_BASE = 'http://127.0.0.1:5000';
-    const resp=await fetch(API_BASE+'/api/chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages,api_key:chatApiKey})
-    });
-    const data=await resp.json();
-    removeTypingIndicator();
-
-    if(data.error){
-      addMessage('ai','⚠️ '+data.error);
-    } else if(data.reply){
-      // 标注模式：LLM 或专业版
-      const modeTag = data.mode==='llm' ? '' : '\n\n（💡 专业版模式——无需 API Key，基于中医知识库自动分析。配置 LLM_API_KEY 可启用大模型深度诊断）';
-      addMessage('ai',data.reply + modeTag);
-      chatHistory.push({role:'assistant',content:data.reply});
-    } else {
-      addMessage('ai','⚠️ 未收到有效回复，请稍后重试。');
-    }
-  }catch(e){
-    removeTypingIndicator();
-    addMessage('ai','⚠️ 连接后端失败。请确认已启动 Flask 服务（python app.py），然后刷新页面。\n错误信息：'+e.message);
-  }
-  isWaitingReply=false;
-  document.getElementById('chatSendBtn').disabled=false;
-  document.getElementById('chatInput').focus();
-}
-
-function sendQuickExample(symptom){
-  document.getElementById('chatInput').value=symptom;
-  sendChatMessage(symptom);
-}
-
-function clearChat(){
-  if(!confirm('确定清空当前对话记录吗？')) return;
-  chatHistory=[];
-  renderWelcomeMessage();
-  document.getElementById('chatInput').value='';
-  showToast('对话已清空');
-}
-
+// 初始化测评页面
+renderQuiz();
 loadData();
 </script>
 </body>
